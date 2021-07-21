@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/tourapp
+    username: postgres
+    password: salam123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
