@@ -1,13 +1,14 @@
 package az.code.tourappapi.services.interfaces;
 
 import az.code.tourappapi.models.Order;
+import az.code.tourappapi.models.dtos.OrderDTO;
 
 import javax.validation.constraints.NotNull;
 
 public interface OrderService {
-    Order update(@NotNull Long id, @NotNull Order order);
+    OrderDTO update(@NotNull Long id, @NotNull Order order);
 
-    Order create(@NotNull Order order);
+    OrderDTO create(@NotNull Order order);
 
     void deleteById(@NotNull Long id);
 

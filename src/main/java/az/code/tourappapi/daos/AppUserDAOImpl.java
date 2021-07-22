@@ -1,5 +1,6 @@
 package az.code.tourappapi.daos;
 
+import az.code.tourappapi.annotations.Exists;
 import az.code.tourappapi.daos.interfaces.AppUserDAO;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.repos.AppUserRepo;
@@ -15,13 +16,14 @@ public class AppUserDAOImpl implements AppUserDAO {
     private final AppUserRepo userRepo;
 
     @Override
-    public AppUser save(@NotNull AppUser appUser) {
+    public AppUser save(AppUser appUser) {
         return userRepo.save(appUser);
     }
 
     @Override
     public void deleteById(@NotNull Long id) {
-        userRepo.deleteById(id);
+        if (existsById(id))
+            userRepo.deleteById(id);
     }
 
     @Override

@@ -1,19 +1,19 @@
 package az.code.tourappapi.services.interfaces;
 
-import az.code.tourappapi.models.AppUser;
+import az.code.tourappapi.models.dtos.AppUserDTO;
 
 import javax.validation.constraints.NotNull;
 
 
 public interface AppUserService {
 
-    AppUser update(@NotNull Long id, @NotNull AppUser appUser);
+    AppUserDTO update(@NotNull Long id, @NotNull AppUserDTO appUser);
 
-    AppUser create(@NotNull AppUser appUser);
+    AppUserDTO create(@NotNull AppUserDTO appUser);
 
     void deleteById(@NotNull Long id);
 
-    AppUser findById(@NotNull Long id);
+    AppUserDTO findById(@NotNull Long id);
 
     boolean existsById(@NotNull Long id);
 }
