@@ -1,5 +1,7 @@
 package az.code.tourappapi.controllers;
 
+
+
 import az.code.tourappapi.services.interfaces.AppUserService;
 import az.code.tourappapi.services.interfaces.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,8 @@ public class ProfileController {
     private final AppUserService userService;
 
 
-    @RequestMapping(path = "",method = RequestMethod.GET)
-    public ResponseEntity<?> getOrders(){
-
+    @RequestMapping(path = "", method = RequestMethod.GET)
+    public ResponseEntity<?> getOrders() {
         return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package az.code.tourappapi.daos.interfaces;
 
+import az.code.tourappapi.annotations.Exists;
 import az.code.tourappapi.models.Order;
 
 import javax.validation.constraints.NotNull;

@@ -7,3 +7,33 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/auth/realms/Traveller/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8081/auth/realms/Traveller
+
+keycloak:
+  auth-server-url: http://localhost:8081/auth/realms/traveller/protocol/openid-connect/auth
+  use-resource-role-mappings: true
+  ssl-required: external
+  realm: traveller
+  resource: tour-app
+  credentials:
+    secret: 088a5ab4-d46c-47c7-af92-0be3b84c33c9
+  bearer-only: true
+  principal-attribute: preferred_username
+
+keycloak-server:
+  product-realm:
+    name: traveller
+    roles:
+      initial: not-verified
+      standard: app-user
+  admin-realm:
+    server-url: http://localhost:8081/auth/
+    username: admin
+    password: admin
+    client-id: admin-cli
+    name: master

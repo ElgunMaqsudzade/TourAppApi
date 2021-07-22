@@ -1,13 +1,18 @@
 package az.code.tourappapi.daos;
 
+import az.code.tourappapi.annotations.Exists;
 import az.code.tourappapi.daos.interfaces.OrderDAO;
+import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.repos.OrderRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class OrderDAOImpl implements OrderDAO {
@@ -20,7 +25,8 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public void deleteById(@NotNull Long id) {
-        orderRepo.deleteById(id);
+        if (existsById(id))
+            orderRepo.deleteById(id);
     }
 
     @Override

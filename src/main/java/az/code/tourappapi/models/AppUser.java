@@ -23,10 +23,10 @@ public class AppUser {
     private String company;
     @NotBlank
     @Size(max = 30)
-    private String name;
+    private String firstName;
     @NotBlank
     @Size(max = 30)
-    private String surname;
+    private String lastName;
     @Max(value = 10)
     private Integer tin;
     @Email()
