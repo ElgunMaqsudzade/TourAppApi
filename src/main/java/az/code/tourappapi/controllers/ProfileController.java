@@ -20,8 +20,9 @@ public class ProfileController {
     private final AppUserService userService;
 
 
-    @RequestMapping(path = "", method = RequestMethod.GET)
+    @RequestMapping(path = "/orders", method = RequestMethod.GET)
     public ResponseEntity<?> getOrders() {
+        System.out.println("ds");
         return new ResponseEntity(HttpStatus.OK);
     }
 }
