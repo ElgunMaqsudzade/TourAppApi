@@ -11,29 +11,29 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8081/auth/realms/Traveller/protocol/openid-connect/certs
-          issuer-uri: http://localhost:8081/auth/realms/Traveller
+          jwk-set-uri: 'http://localhost:8081/auth/realms/traveller/protocol/openid-connect/certs'
+          issuer-uri: 'http://localhost:8081/auth/realms/traveller'
 
 keycloak:
-  auth-server-url: http://localhost:8081/auth/realms/traveller/protocol/openid-connect/auth
-  use-resource-role-mappings: true
+  auth-server-url: http://localhost:8081/auth/
   ssl-required: external
   realm: traveller
   resource: tour-app
   credentials:
-    secret: 088a5ab4-d46c-47c7-af92-0be3b84c33c9
+    secret: b81adc70-34f9-4d83-8b3f-ce6521ce5599
   bearer-only: true
   principal-attribute: preferred_username
+
 
 keycloak-server:
   product-realm:
     name: traveller
     roles:
-      initial: not-verified
-      standard: app-user
+      initial: 'not-verified'
+      standard: 'app-user'
   admin-realm:
     server-url: http://localhost:8081/auth/
-    username: admin
-    password: admin
+    username: jon_snow883
+    password: salam123
     client-id: admin-cli
     name: master
