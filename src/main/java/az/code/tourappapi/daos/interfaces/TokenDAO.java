@@ -17,5 +17,7 @@ public interface TokenDAO {
 
     Optional<Token> find(@NotNull String email, @NotNull String token);
 
+    Optional<Token> verified(@NotNull String email, @NotNull TokenType type);
+
     boolean exists(@NotNull Long id);
 }

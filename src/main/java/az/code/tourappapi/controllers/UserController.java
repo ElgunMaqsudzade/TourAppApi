@@ -23,6 +23,6 @@ public class UserController {
 
     @RequestMapping(path = "/verify", method = RequestMethod.GET)
     public ResponseEntity<Boolean> verifyToken(@RequestParam String token, @RequestAttribute("email") String email) {
-        return new ResponseEntity<>(keycloakService.verifyToken(token, email), HttpStatus.OK);
+        return new ResponseEntity<>(keycloakService.verifyEmail(token, email), HttpStatus.OK);
     }
 }
