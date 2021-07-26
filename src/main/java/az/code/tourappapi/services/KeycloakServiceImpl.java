@@ -5,10 +5,13 @@ import az.code.tourappapi.configs.KeycloakConfig;
 import az.code.tourappapi.daos.interfaces.TokenDAO;
 import az.code.tourappapi.exceptions.BadRequestException;
 import az.code.tourappapi.exceptions.ConflictException;
+import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.Token;
 import az.code.tourappapi.models.dtos.AppUserDTO;
+import az.code.tourappapi.models.dtos.ChangePasswordDTO;
 import az.code.tourappapi.models.dtos.SignInDTO;
+import az.code.tourappapi.models.dtos.UpdatePasswordDTO;
 import az.code.tourappapi.models.enums.TokenType;
 import az.code.tourappapi.services.interfaces.AppUserService;
 import az.code.tourappapi.services.interfaces.KeycloakService;
@@ -62,6 +65,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     @Override
     public AppUserDTO create(AppUserDTO appUserDTO) {
         UserRepresentation userRep = mapper.convertValue(appUserDTO, UserRepresentation.class);
+        userRep.setCredentials(Collections.singletonList(passwordCred(appUserDTO.getPassword())));
         userRep.setUsername(appUserDTO.getEmail());
         userRep.setEnabled(true);
 
@@ -73,14 +77,9 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         if (response.getStatus() == 201) {
             String userId = CreatedResponseUtil.getCreatedId(response);
-            CredentialRepresentation passwordCred = createPasswordCredentials(appUserDTO.getPassword());
-
             UserResource userResource = usersResource.get(userId);
             RoleRepresentation realmRoleUser = rolesResource.get(initialRole).toRepresentation();
             userResource.roles().realmLevel().add(Collections.singletonList(realmRoleUser));
-            // Set password credential
-            userResource.resetPassword(passwordCred);
-            //create newUser for database
             userService.create(appUserDTO);
         } else
             throw new BadRequestException(response.getStatusInfo().toString());
@@ -90,13 +89,21 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public AccessTokenResponse signIn(SignInDTO sign) {
-        credentials.put(OAuth2Constants.GRANT_TYPE, OAuth2Constants.PASSWORD);
-        Configuration configuration = new Configuration(authUrl, realm, clientId, credentials, null);
-        AuthzClient authzClient = AuthzClient.create(configuration);
-        try {
-            return authzClient.obtainAccessToken(sign.getEmail(), sign.getPassword());
-        } catch (Exception ex) {
+        Optional<AccessTokenResponse> tokenResponse = authorize(sign.getEmail(), sign.getPassword());
+        if (tokenResponse.isEmpty())
             throw new BadRequestException("User not found");
+
+        return tokenResponse.get();
+    }
+
+    private Optional<AccessTokenResponse> authorize(String email, String password) {
+        try {
+            credentials.put(OAuth2Constants.GRANT_TYPE, OAuth2Constants.PASSWORD);
+            Configuration configuration = new Configuration(authUrl, realm, clientId, credentials, null);
+            AuthzClient authzClient = AuthzClient.create(configuration);
+            return Optional.of(authzClient.obtainAccessToken(email, password));
+        } catch (Exception ex) {
+            return Optional.empty();
         }
     }
 
@@ -130,8 +137,35 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
 
+    private void setPassword(String password, UserResource ur) {
+        UserRepresentation userRep = ur.toRepresentation();
+        userRep.setCredentials(Collections.singletonList(passwordCred(password)));
+        ur.update(userRep);
+    }
 
-    private CredentialRepresentation createPasswordCredentials(String password) {
+    @Override
+    public void updatePassword(String email, UpdatePasswordDTO passwordDTO) {
+        UserResource ur = find(email);
+
+        Runnable exception = () -> {
+            throw new BadRequestException("Old password isn't correct");
+        };
+
+        Optional<AccessTokenResponse> authorize = authorize(email, passwordDTO.getOldPassword());
+        authorize.ifPresentOrElse(i -> setPassword(passwordDTO.getNewPassword(), ur), exception);
+    }
+
+
+    private UserResource find(String email) {
+        RealmResource realmResource = conf.getInstance().realm(realm);
+        Optional<UserRepresentation> opUserRes = realmResource.users().search(email).stream().findAny();
+        if (opUserRes.isEmpty())
+            throw new DataNotFound("User not found");
+
+        return realmResource.users().get(opUserRes.get().getId());
+    }
+
+    private CredentialRepresentation passwordCred(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();
         passwordCredentials.setTemporary(false);
         passwordCredentials.setType(CredentialRepresentation.PASSWORD);
