@@ -1,18 +1,21 @@
 package az.code.tourappapi.services;
 
 import az.code.tourappapi.components.SchedulerExecutor;
-import az.code.tourappapi.configs.KeycloakAdminConfig;
 import az.code.tourappapi.configs.KeycloakConfig;
+import az.code.tourappapi.daos.interfaces.TokenDAO;
 import az.code.tourappapi.exceptions.BadRequestException;
+import az.code.tourappapi.exceptions.ConflictException;
+import az.code.tourappapi.models.AppUser;
+import az.code.tourappapi.models.Token;
 import az.code.tourappapi.models.dtos.AppUserDTO;
 import az.code.tourappapi.models.dtos.SignInDTO;
+import az.code.tourappapi.models.enums.TokenType;
 import az.code.tourappapi.services.interfaces.AppUserService;
-import az.code.tourappapi.services.interfaces.AuthService;
+import az.code.tourappapi.services.interfaces.KeycloakService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.CreatedResponseUtil;
-import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
@@ -27,44 +30,46 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class KeycloakServiceImpl implements KeycloakService {
     private final AppUserService userService;
-    private final SchedulerExecutor sch;
-    private final Keycloak keycloak;
-    private final KeycloakAdminConfig conf;
-    private final KeycloakConfig config;
+    private final TokenDAO tokenDAO;
+    private final KeycloakConfig conf;
     private final ObjectMapper mapper;
+    private final SchedulerExecutor sch;
 
 
-    private String productRealm;
+    private String realm;
     private String authUrl;
     private String clientId;
     private String initialRole;
+    private String standardRole;
     private Map<String, Object> credentials;
 
     @PostConstruct
     public void setRealmProps() {
-        this.productRealm = config.getRealm();
-        this.initialRole = conf.getProductRealm().getRoles().getInitial();
-        this.authUrl = config.getAuthServerUrl();
-        this.clientId = config.getResource();
-        this.credentials = config.getCredentials();
+        this.initialRole = conf.getRoles().getInitial();
+        this.standardRole = conf.getRoles().getStandard();
+        this.realm = conf.getProps().getRealm();
+        this.authUrl = conf.getProps().getAuthServerUrl();
+        this.clientId = conf.getProps().getResource();
+        this.credentials = conf.getProps().getCredentials();
     }
 
     @Override
     public AppUserDTO create(AppUserDTO appUserDTO) {
-        UserRepresentation userRepresentation = userRepresentation(appUserDTO);
+        UserRepresentation userRep = mapper.convertValue(appUserDTO, UserRepresentation.class);
+        userRep.setUsername(appUserDTO.getEmail());
+        userRep.setEnabled(true);
 
-        RealmResource realmResource = keycloak.realm(productRealm);
+        RealmResource realmResource = conf.getInstance().realm(realm);
         RolesResource rolesResource = realmResource.roles();
         UsersResource usersResource = realmResource.users();
 
-        Response response = usersResource.create(userRepresentation);
+        Response response = usersResource.create(userRep);
 
         if (response.getStatus() == 201) {
             String userId = CreatedResponseUtil.getCreatedId(response);
@@ -86,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AccessTokenResponse signIn(SignInDTO sign) {
         credentials.put(OAuth2Constants.GRANT_TYPE, OAuth2Constants.PASSWORD);
-        Configuration configuration = new Configuration(authUrl, productRealm, clientId, credentials, null);
+        Configuration configuration = new Configuration(authUrl, realm, clientId, credentials, null);
         AuthzClient authzClient = AuthzClient.create(configuration);
         try {
             return authzClient.obtainAccessToken(sign.getEmail(), sign.getPassword());
@@ -96,12 +101,35 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private UserRepresentation userRepresentation(AppUserDTO user) {
-        UserRepresentation userRep = mapper.convertValue(user, UserRepresentation.class);
-        userRep.setUsername(user.getEmail());
-        userRep.setEnabled(true);
-        return userRep;
+    @Override
+    public void sendToken(String email, TokenType type) {
+        AppUser appUser = userService.find(email);
+        Token token = Token.builder().type(type).token(UUID.randomUUID().toString()).appUser(appUser).build();
+        tokenDAO.save(token);
+        sch.runEmailVerification(token);
     }
+
+    @Override
+    public boolean verifyToken(String token, String email) {
+        Optional<Token> optionalToken = tokenDAO.find(email, token);
+        if (optionalToken.isPresent()) {
+            RealmResource realmResource = conf.getInstance().realm(realm);
+            RolesResource rolesResource = realmResource.roles();
+            RoleRepresentation initial = rolesResource.get(initialRole).toRepresentation();
+            RoleRepresentation standard = rolesResource.get(standardRole).toRepresentation();
+            UserRepresentation userRep = realmResource.users().search(email).get(0);
+            userRep.setEmailVerified(true);
+            UserResource ur = realmResource.users().get(realmResource.users().search(email).get(0).getId());
+            ur.roles().realmLevel().remove(Collections.singletonList(initial));
+            ur.roles().realmLevel().add(Collections.singletonList(standard));
+            ur.update(userRep);
+            tokenDAO.delete(optionalToken.get().getId());
+            return true;
+        }
+        return false;
+    }
+
+
 
     private CredentialRepresentation createPasswordCredentials(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();

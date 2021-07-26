@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface OrderDAO {
     Order save(@NotNull Order order);
 
-    void deleteById(@NotNull Long id);
+    void delete(@NotNull Long id);
 
-    Optional<Order> findById(@NotNull Long id);
+    Optional<Order> find(@NotNull Long id);
 
-    boolean existsById(@NotNull Long id);
+    boolean exists(@NotNull Long id);
 }

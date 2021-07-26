@@ -10,9 +10,9 @@ public interface OrderService {
 
     OrderDTO create(@NotNull Order order);
 
-    void deleteById(@NotNull Long id);
+    void delete(@NotNull Long id);
 
-    Order findById(@NotNull Long id);
+    Order find(@NotNull Long id);
 
-    boolean existsById(@NotNull Long id);
+    boolean exists(@NotNull Long id);
 }

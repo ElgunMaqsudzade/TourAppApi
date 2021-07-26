@@ -29,19 +29,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteById(@NotNull Long id) {
-        orderDAO.deleteById(20L);
+    public void delete(@NotNull Long id) {
+        orderDAO.delete(id);
     }
 
     @Override
-    public Order findById(@NotNull Long id) {
-        Optional<Order> order = orderDAO.findById(id);
+    public Order find(@NotNull Long id) {
+        Optional<Order> order = orderDAO.find(id);
         if (order.isEmpty()) throw new DataNotFound("Order not found in database");
         return order.get();
     }
 
     @Override
-    public boolean existsById(@NotNull Long id) {
-        return orderDAO.existsById(id);
+    public boolean exists(@NotNull Long id) {
+        return orderDAO.exists(id);
     }
 }
