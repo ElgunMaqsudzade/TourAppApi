@@ -1,6 +1,5 @@
 package az.code.tourappapi.daos;
 
-import az.code.tourappapi.annotations.Exists;
 import az.code.tourappapi.daos.interfaces.AppUserDAO;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.repos.AppUserRepo;

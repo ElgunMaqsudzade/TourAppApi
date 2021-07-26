@@ -1,13 +1,10 @@
 package az.code.tourappapi.models;
 
-import az.code.tourappapi.annotations.Exists;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
