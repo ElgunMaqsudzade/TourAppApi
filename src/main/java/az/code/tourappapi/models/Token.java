@@ -20,6 +20,7 @@ public class Token implements Serializable {
     @Enumerated(EnumType.STRING)
     private TokenType type;
     private String token;
+    private boolean verified;
     @ManyToOne
     private AppUser appUser;
 }

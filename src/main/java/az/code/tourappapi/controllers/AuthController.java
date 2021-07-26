@@ -1,8 +1,7 @@
 package az.code.tourappapi.controllers;
 
-import az.code.tourappapi.components.SchedulerExecutor;
-import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.dtos.AppUserDTO;
+import az.code.tourappapi.models.dtos.ChangePasswordDTO;
 import az.code.tourappapi.models.dtos.SignInDTO;
 import az.code.tourappapi.models.enums.TokenType;
 import az.code.tourappapi.services.interfaces.KeycloakService;
@@ -27,5 +26,23 @@ public class AuthController {
     @RequestMapping(path = "/signIn", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody @Valid SignInDTO signInDTO) {
         return new ResponseEntity<>(keycloakService.signIn(signInDTO), HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/send-token", method = RequestMethod.GET)
+    public ResponseEntity<?> sendToken(@RequestParam TokenType type, @RequestParam String email) {
+        keycloakService.sendToken(email, type);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/verify-token", method = RequestMethod.GET)
+    public ResponseEntity<?> verifyToken(@RequestParam String token, @RequestParam String email) {
+        keycloakService.verifyToken(token, email);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/forgot-password", method = RequestMethod.POST)
+    public ResponseEntity<?> forgotPassword(@RequestBody @Valid ChangePasswordDTO passwordDTO) {
+        keycloakService.changePassword(passwordDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

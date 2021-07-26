@@ -4,7 +4,6 @@ import az.code.tourappapi.components.SchedulerExecutor;
 import az.code.tourappapi.configs.KeycloakConfig;
 import az.code.tourappapi.daos.interfaces.TokenDAO;
 import az.code.tourappapi.exceptions.BadRequestException;
-import az.code.tourappapi.exceptions.ConflictException;
 import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.Token;
@@ -117,9 +116,22 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
     @Override
-    public boolean verifyToken(String token, String email) {
+    public Optional<Token> verifyToken(String token, String email) {
         Optional<Token> optionalToken = tokenDAO.find(email, token);
+
+        Runnable exception = () -> {
+            throw new DataNotFound("Provided token couldn't found");
+        };
+        optionalToken.ifPresentOrElse(i -> tokenDAO.save(i.toBuilder().verified(true).build()), exception);
+        return optionalToken;
+    }
+
+    @Override
+    public boolean verifyEmail(String token, String email) {
+        Optional<Token> optionalToken = verifyToken(email, token);
         if (optionalToken.isPresent()) {
+            Token vToken = optionalToken.get();
+            tokenDAO.save(vToken.toBuilder().verified(true).build());
             RealmResource realmResource = conf.getInstance().realm(realm);
             RolesResource rolesResource = realmResource.roles();
             RoleRepresentation initial = rolesResource.get(initialRole).toRepresentation();
@@ -130,7 +142,7 @@ public class KeycloakServiceImpl implements KeycloakService {
             ur.roles().realmLevel().remove(Collections.singletonList(initial));
             ur.roles().realmLevel().add(Collections.singletonList(standard));
             ur.update(userRep);
-            tokenDAO.delete(optionalToken.get().getId());
+            tokenDAO.delete(vToken.getId());
             return true;
         }
         return false;
@@ -153,6 +165,26 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         Optional<AccessTokenResponse> authorize = authorize(email, passwordDTO.getOldPassword());
         authorize.ifPresentOrElse(i -> setPassword(passwordDTO.getNewPassword(), ur), exception);
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDTO passwordDTO) {
+        UserResource ur = find(passwordDTO.getEmail());
+        Optional<Token> optionalToken = tokenDAO.find(passwordDTO.getEmail(), passwordDTO.getToken());
+
+        if (optionalToken.isEmpty())
+            throw new DataNotFound("Token not found");
+
+        Runnable exception = () -> {
+            throw new BadRequestException("Token isn't verified");
+        };
+
+        optionalToken.filter(Token::isVerified)
+                .ifPresentOrElse(i -> {
+                            setPassword(passwordDTO.getNewPassword(), ur);
+                            tokenDAO.delete(i.getId());
+                        },
+                        exception);
     }
 
 

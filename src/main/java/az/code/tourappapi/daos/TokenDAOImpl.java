@@ -60,6 +60,12 @@ public class TokenDAOImpl implements TokenDAO {
     }
 
     @Override
+    public Optional<Token> verified(@NotNull String email, @NotNull TokenType type) {
+        Optional<Token> optionalToken = find(email, type);
+        return optionalToken.filter(Token::isVerified);
+    }
+
+    @Override
     public boolean exists(@NotNull Long id) {
         return tokenRepo.existsById(id);
     }
