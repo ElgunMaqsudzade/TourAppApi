@@ -33,8 +33,6 @@ public class AppUser {
     @NotBlank(message = "Shouldn't be blank")
     @Size(max = 30)
     private String email;
-    @Pattern(regexp = "^[\\w@#$%^&]{6,15}$")
-    private String password;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     private List<Offer> offers;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

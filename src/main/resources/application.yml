@@ -13,6 +13,27 @@ spring:
         jwt:
           jwk-set-uri: 'http://localhost:8081/auth/realms/traveller/protocol/openid-connect/certs'
           issuer-uri: 'http://localhost:8081/auth/realms/traveller'
+  mail:
+    host: smtp.gmail.com
+    username: backend.ended@gmail.com
+    password: Salam123
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 465
+          auth: true
+          ssl:
+            enable: true
+  quartz:
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 20
+
+
 
 keycloak:
   auth-server-url: http://localhost:8081/auth/
@@ -24,16 +45,13 @@ keycloak:
   bearer-only: true
   principal-attribute: preferred_username
 
+keycloak-admin:
+  username: jon_snow883
+  password: salam123
+  client-id: admin-cli
+  realm: master
+  roles:
+    initial: 'not-verified'
+    standard: 'app-user'
 
-keycloak-server:
-  product-realm:
-    name: traveller
-    roles:
-      initial: 'not-verified'
-      standard: 'app-user'
-  admin-realm:
-    server-url: http://localhost:8081/auth/
-    username: jon_snow883
-    password: salam123
-    client-id: admin-cli
-    name: master
+

@@ -1,8 +1,7 @@
 package az.code.tourappapi.services.interfaces;
 
+import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.dtos.AppUserDTO;
-import az.code.tourappapi.models.dtos.SignInDTO;
-import org.keycloak.representations.AccessTokenResponse;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,9 +12,13 @@ public interface AppUserService {
 
     AppUserDTO create(@NotNull AppUserDTO appUser);
 
-    void deleteById(@NotNull Long id);
+    void delete(@NotNull Long id);
 
-    AppUserDTO findById(@NotNull Long id);
+    AppUserDTO find(@NotNull Long id);
 
-    boolean existsById(@NotNull Long id);
+    AppUser find(@NotNull String email);
+
+    boolean exists(@NotNull Long id);
+
+    boolean isNew(@NotNull AppUserDTO appUserDTO);
 }

@@ -1,7 +1,8 @@
 package az.code.tourappapi.configs;
 
 
-import az.code.tourappapi.utils.KeycloakRealmRoleConverter;
+import az.code.tourappapi.components.TokenInterceptor;
+import az.code.tourappapi.utils.KeycloakUtil;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
@@ -23,22 +24,30 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;
 
 @KeycloakConfiguration
 @RequiredArgsConstructor
-class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
-    private final KeycloakClientRequestFactory keycloakClientRequestFactory;
-    private final KeycloakAdminConfig adminConfig;
+class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter implements WebMvcConfigurer {
+    private final KeycloakConfig config;
+    private final TokenInterceptor interceptor;
 
     private String notVerified;
     private String standard;
 
     @PostConstruct
     private void setAdminConfig() {
-        this.standard = adminConfig.getProductRealm().getRoles().getStandard();
-        this.notVerified = adminConfig.getProductRealm().getRoles().getInitial();
+        this.standard = config.getRoles().getStandard();
+        this.notVerified = config.getRoles().getInitial();
+    }
+
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor);
     }
 
     @Autowired
@@ -55,7 +64,8 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .sessionAuthenticationStrategy(sessionAuthenticationStrategy())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/*").permitAll()
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/user/**").hasRole(notVerified)
                 .antMatchers("/api/v1/profile/**").hasRole(standard)
                 .anyRequest()
                 .authenticated()
@@ -68,10 +78,9 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
-        jwtConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmRoleConverter());
+        jwtConverter.setJwtGrantedAuthoritiesConverter(new KeycloakUtil());
         return jwtConverter;
     }
-
 
     @Bean
     public KeycloakSpringBootConfigResolver KeycloakConfigResolver() {
