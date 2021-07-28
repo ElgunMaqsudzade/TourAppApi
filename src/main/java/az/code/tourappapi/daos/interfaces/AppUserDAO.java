@@ -13,9 +13,9 @@ public interface AppUserDAO {
 
     void delete(@NotNull Long id);
 
-    Optional<AppUser> find(@NotNull Long id);
+    AppUser find(@NotNull Long id);
 
-    Optional<AppUser> find(@NotNull String email);
+    AppUser find(@NotNull String email);
 
     List<AppUser> findAll(@Nullable Specification<AppUser> spec);
 

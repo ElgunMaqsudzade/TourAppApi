@@ -1,47 +1,71 @@
 package az.code.tourappapi.services;
 
+import az.code.tourappapi.configs.AppConfig;
+import az.code.tourappapi.configs.BasicConfig;
 import az.code.tourappapi.daos.interfaces.OrderDAO;
 import az.code.tourappapi.exceptions.DataNotFound;
+import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.dtos.OrderDTO;
+import az.code.tourappapi.models.dtos.PaginationDTO;
 import az.code.tourappapi.services.interfaces.OrderService;
+import az.code.tourappapi.utils.ModelMapperUtil;
+import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderDAO orderDAO;
-    private final ObjectMapper mapper;
+    private final OrderSpec orderSpec;
+    private final ModelMapperUtil util;
+    private final AppConfig conf;
 
     @Override
-    public OrderDTO update(@NotNull Long id, @NotNull Order order) {
-        return mapper.convertValue(orderDAO.save(order.toBuilder().id(id).build()),OrderDTO.class);
+    public void create(@NotNull OrderDTO orderDTO) {
+        Order order = util.map(orderDTO, Order.class);
+        orderDAO.save(order.toBuilder().createDate(LocalDateTime.now()).build());
     }
 
     @Override
-    public OrderDTO create(@NotNull Order order) {
-        return mapper.convertValue(orderDAO.save(order),OrderDTO.class);
+    public OrderDTO update(@NotNull Long id, @NotNull OrderDTO orderDTO) {
+        Order order = util.map(orderDTO, Order.class);
+        return util.map(orderDAO.save(order.toBuilder().id(id).build()), OrderDTO.class);
+    }
+
+
+    @Override
+    public OrderDTO find(@NotNull AppUser user, @NotNull Long id) {
+        return util.map(orderDAO.find(id), OrderDTO.class);
     }
 
     @Override
-    public void delete(@NotNull Long id) {
-        orderDAO.delete(id);
-    }
+    public PaginationDTO<OrderDTO> findAll(@NotNull AppUser user, Integer page, Integer size) {
+        Specification<Order> spec = Specification
+                .where(orderSpec.afterThan(user.getCreateDate())
+                        .and(orderSpec.archived(false, user)));
 
-    @Override
-    public Order find(@NotNull Long id) {
-        Optional<Order> order = orderDAO.find(id);
-        if (order.isEmpty()) throw new DataNotFound("Order not found in database");
-        return order.get();
-    }
-
-    @Override
-    public boolean exists(@NotNull Long id) {
-        return orderDAO.exists(id);
+        Page<Order> p = orderDAO.findAll(spec, PageRequest.of(page, size));
+        PaginationDTO<OrderDTO> pOrder = util.toPagination(p, OrderDTO.class);
+        p.getContent().parallelStream()
+                .forEach(o -> pOrder.getItems()
+                        .parallelStream()
+                        .filter(i -> i.getId().equals(o.getId()))
+                        .findFirst()
+                        .ifPresent(i -> {
+                            i.setExpireTime(o.getCreateDate().plusHours(conf.getDurationHour()));
+                        }));
+        return pOrder;
     }
 }
