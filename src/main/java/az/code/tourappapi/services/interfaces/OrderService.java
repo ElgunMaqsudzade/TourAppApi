@@ -1,18 +1,19 @@
 package az.code.tourappapi.services.interfaces;
 
+import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.dtos.OrderDTO;
+import az.code.tourappapi.models.dtos.PaginationDTO;
 
 import javax.validation.constraints.NotNull;
 
 public interface OrderService {
-    OrderDTO update(@NotNull Long id, @NotNull Order order);
+    void create(@NotNull OrderDTO order);
 
-    OrderDTO create(@NotNull Order order);
 
-    void delete(@NotNull Long id);
+    OrderDTO update(@NotNull Long orderId, @NotNull OrderDTO order);
 
-    Order find(@NotNull Long id);
+    OrderDTO find(@NotNull AppUser user, @NotNull Long id);
 
-    boolean exists(@NotNull Long id);
+    PaginationDTO<OrderDTO> findAll(@NotNull AppUser user, Integer page, Integer count);
 }

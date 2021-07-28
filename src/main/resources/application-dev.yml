@@ -1,6 +1,8 @@
 spring:
-  profiles:
-    active: dev
+  datasource:
+    url: jdbc:postgresql://localhost/tourapp
+    username: postgres
+    password: salam123
   jpa:
     hibernate:
       ddl-auto: update
@@ -33,8 +35,7 @@ spring:
         quartz:
           threadPool:
             threadCount: 20
-  jackson:
-    date-format:
+
 
 
 keycloak:

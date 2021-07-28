@@ -1,12 +1,15 @@
 package az.code.tourappapi.models;
 
+import az.code.tourappapi.models.enums.OrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,8 +36,10 @@ public class AppUser {
     @NotBlank(message = "Shouldn't be blank")
     @Size(max = 30)
     private String email;
+    private LocalDateTime createDate;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
-    private List<Offer> offers;
+    private Set<Offer> offers;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<AppUserOrder> appUserOrders;
+    private Set<AppUserOrder> appUserOrders;
+
 }
