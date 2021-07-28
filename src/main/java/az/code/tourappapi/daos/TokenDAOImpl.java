@@ -54,7 +54,7 @@ public class TokenDAOImpl implements TokenDAO {
     public Optional<Token> find(@NotNull String email, @NotNull String token) {
         Specification<Token> spec = (r, q, cb) ->
                 cb.and(cb.equal(r.get(Token_.APP_USER).get(AppUser_.EMAIL), email),
-                        cb.equal(r.get(Token_.TOKEN), token));
+                cb.equal(r.get(Token_.TOKEN), token));
 
         return tokenRepo.findAll(spec).stream().findAny();
     }

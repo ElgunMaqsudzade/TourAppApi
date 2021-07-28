@@ -15,15 +15,14 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppUserOrder {
-    @EmbeddedId
-    private AppUserOrderId id = new AppUserOrderId();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("appUserId")
     private AppUser appUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("orderId")
     private Order order;
 
     @NotNull

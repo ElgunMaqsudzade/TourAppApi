@@ -9,12 +9,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app", ignoreInvalidFields = true)
 public class AppConfig {
     private Long durationHour;
-    private MapperProps mapper;
-
-    @Data
-    public static class MapperProps{
-        private String localDateTimeFormat;
-        private String localDateFormat;
-        private String localTimeFormat;
-    }
+    private Boolean onetimeOnly;
 }

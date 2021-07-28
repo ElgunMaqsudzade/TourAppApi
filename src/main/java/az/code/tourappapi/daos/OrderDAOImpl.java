@@ -1,10 +1,14 @@
 package az.code.tourappapi.daos;
 
 import az.code.tourappapi.daos.interfaces.OrderDAO;
+import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.repos.OrderRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
@@ -23,12 +27,25 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public void delete(@NotNull Long id) {
-            orderRepo.deleteById(id);
+        orderRepo.deleteById(id);
     }
 
     @Override
-    public Optional<Order> find(@NotNull Long id) {
-        return orderRepo.findById(id);
+    public Order find(@NotNull Long id) {
+        Optional<Order> order = orderRepo.findById(id);
+        if (order.isEmpty()) throw new DataNotFound("Order not found in database");
+
+        return order.get();
+    }
+
+    @Override
+    public Page<Order> findAll(@NotNull Specification<Order> spec, Pageable pageable) {
+        return orderRepo.findAll(spec, pageable);
+    }
+
+    @Override
+    public Page<Order> findAll(@NotNull Pageable pageable) {
+        return orderRepo.findAll(pageable);
     }
 
     @Override

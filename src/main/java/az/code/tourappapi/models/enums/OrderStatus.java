@@ -4,5 +4,5 @@ public enum OrderStatus {
     NEW,
     OFFERED,
     ACCEPTED,
-    EXPIRED
+    EXPIRED;
 }

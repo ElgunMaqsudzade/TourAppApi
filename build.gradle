@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security.oauth:spring-security-oauth2:2.3.5.RELEASE'
     implementation 'org.keycloak:keycloak-spring-boot-starter:14.0.0'
+    implementation 'org.modelmapper:modelmapper:2.4.4'
     implementation 'org.keycloak:keycloak-admin-client:14.0.0'
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'org.hibernate:hibernate-jpamodelgen'

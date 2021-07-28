@@ -14,6 +14,7 @@ import az.code.tourappapi.models.dtos.UpdatePasswordDTO;
 import az.code.tourappapi.models.enums.TokenType;
 import az.code.tourappapi.services.interfaces.AppUserService;
 import az.code.tourappapi.services.interfaces.KeycloakService;
+import az.code.tourappapi.utils.ModelMapperUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
@@ -40,7 +41,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     private final AppUserService userService;
     private final TokenDAO tokenDAO;
     private final KeycloakConfig conf;
-    private final ObjectMapper mapper;
+    private final ModelMapperUtil mapper;
     private final SchedulerExecutor sch;
 
 
@@ -63,7 +64,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public AppUserDTO create(AppUserDTO appUserDTO) {
-        UserRepresentation userRep = mapper.convertValue(appUserDTO, UserRepresentation.class);
+        UserRepresentation userRep = mapper.map(appUserDTO, UserRepresentation.class);
         userRep.setCredentials(Collections.singletonList(passwordCred(appUserDTO.getPassword())));
         userRep.setUsername(appUserDTO.getEmail());
         userRep.setEnabled(true);
@@ -116,7 +117,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
     @Override
-    public Optional<Token> verifyToken(String token, String email) {
+    public Optional<Token> verifyToken(String email, String token) {
         Optional<Token> optionalToken = tokenDAO.find(email, token);
 
         Runnable exception = () -> {
@@ -131,7 +132,6 @@ public class KeycloakServiceImpl implements KeycloakService {
         Optional<Token> optionalToken = verifyToken(email, token);
         if (optionalToken.isPresent()) {
             Token vToken = optionalToken.get();
-            tokenDAO.save(vToken.toBuilder().verified(true).build());
             RealmResource realmResource = conf.getInstance().realm(realm);
             RolesResource rolesResource = realmResource.roles();
             RoleRepresentation initial = rolesResource.get(initialRole).toRepresentation();
@@ -183,8 +183,7 @@ public class KeycloakServiceImpl implements KeycloakService {
                 .ifPresentOrElse(i -> {
                             setPassword(passwordDTO.getNewPassword(), ur);
                             tokenDAO.delete(i.getId());
-                        },
-                        exception);
+                        }, exception);
     }
 
 

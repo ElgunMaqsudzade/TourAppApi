@@ -1,6 +1,7 @@
 package az.code.tourappapi.daos;
 
 import az.code.tourappapi.daos.interfaces.AppUserDAO;
+import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.repos.AppUserRepo;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +27,23 @@ public class AppUserDAOImpl implements AppUserDAO {
 
     @Override
     public void delete(@NotNull Long id) {
-            userRepo.deleteById(id);
+        userRepo.deleteById(id);
     }
 
     @Override
-    public Optional<AppUser> find(@NotNull Long id) {
-        return userRepo.findById(id);
+    public AppUser find(@NotNull Long id) {
+        Optional<AppUser> opUser = userRepo.findById(id);
+        if (opUser.isEmpty()) throw new DataNotFound("User not found in database");
+
+        return opUser.get();
     }
 
     @Override
-    public Optional<AppUser> find(String email) {
-        return userRepo.findByEmail(email);
+    public AppUser find(String email) {
+        Optional<AppUser> opUser = userRepo.findByEmail(email);
+        if (opUser.isEmpty()) throw new DataNotFound("User not found in database");
+
+        return opUser.get();
     }
 
     @Override

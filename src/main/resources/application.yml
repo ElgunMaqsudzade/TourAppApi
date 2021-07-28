@@ -57,8 +57,4 @@ keycloak-admin:
     standard: 'app-user'
 app:
   duration-hour: 24
-  mapper:
-    local-date-format: yyyy-MM-dd
-    local-date-time-format: yyyy-MM-dd HH:mm:ss
-    local-time-format: HH:mm:ss
-
+  onetime-only: true
