@@ -3,9 +3,10 @@ package az.code.tourappapi.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,11 +23,13 @@ public class Order {
     private String tourType;
     private String addressFrom;
     private String addressTo;
-    private LocalTime travelStartDate;
-    private LocalTime travelEndDate;
+    private LocalDate travelStartDate;
+    private LocalDate travelEndDate;
     private String travellerCount;
     private Double budget;
-    private LocalDateTime expireTime;
+    private LocalDateTime createDate;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<AppUserOrder> appUserOrders;
+    private Set<AppUserOrder> appUserOrders;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Offer> offers;
 }

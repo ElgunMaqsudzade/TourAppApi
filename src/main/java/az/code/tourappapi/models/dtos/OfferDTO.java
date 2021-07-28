@@ -1,27 +1,29 @@
-package az.code.tourappapi.models;
+package az.code.tourappapi.models.dtos;
 
 import az.code.tourappapi.annotations.Length;
+import az.code.tourappapi.models.AppUser;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-@Getter
-@Setter
+
+@Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "offers")
-public class Offer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class OfferDTO implements Serializable {
     private Long id;
+    @NotBlank
     @Size(max = 1000)
     private String description;
+    @NotBlank
     @Size(max = 1000)
     private String locations;
     @NotNull
@@ -31,8 +33,4 @@ public class Offer {
     @Length(max = 9)
     @Positive
     private Double price;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private AppUser appUser;
-    @ManyToOne
-    private Order order;
 }

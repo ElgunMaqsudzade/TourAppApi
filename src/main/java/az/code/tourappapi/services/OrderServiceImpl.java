@@ -5,9 +5,11 @@ import az.code.tourappapi.configs.BasicConfig;
 import az.code.tourappapi.daos.interfaces.OrderDAO;
 import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.AppUser;
+import az.code.tourappapi.models.AppUserOrder;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.dtos.OrderDTO;
 import az.code.tourappapi.models.dtos.PaginationDTO;
+import az.code.tourappapi.models.enums.OrderStatus;
 import az.code.tourappapi.services.interfaces.OrderService;
 import az.code.tourappapi.utils.ModelMapperUtil;
 import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -53,11 +57,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PaginationDTO<OrderDTO> findAll(@NotNull AppUser user, Integer page, Integer size) {
         Specification<Order> spec = Specification
-                .where(orderSpec.afterThan(user.getCreateDate())
-                        .and(orderSpec.archived(false, user)));
+                .where(orderSpec.exclude(OrderStatus.EXPIRED))
+                .and(orderSpec.archived(false, user))
+                .and(orderSpec.afterThan(user.getCreateDate()));
 
         Page<Order> p = orderDAO.findAll(spec, PageRequest.of(page, size));
         PaginationDTO<OrderDTO> pOrder = util.toPagination(p, OrderDTO.class);
+
         p.getContent().parallelStream()
                 .forEach(o -> pOrder.getItems()
                         .parallelStream()
@@ -65,6 +71,14 @@ public class OrderServiceImpl implements OrderService {
                         .findFirst()
                         .ifPresent(i -> {
                             i.setExpireTime(o.getCreateDate().plusHours(conf.getDurationHour()));
+                            if (o.getAppUserOrders().isEmpty())
+                                i.setOrderStatus(OrderStatus.NEW);
+                            else
+                                o.getAppUserOrders()
+                                        .parallelStream()
+                                        .map(AppUserOrder::getStatus)
+                                        .max(Comparator.comparing(OrderStatus::ordinal))
+                                        .ifPresent(i::setOrderStatus);
                         }));
         return pOrder;
     }

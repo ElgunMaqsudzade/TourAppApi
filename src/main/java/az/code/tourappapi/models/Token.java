@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "tokens")
-public class Token implements Serializable {
+public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,6 +21,6 @@ public class Token implements Serializable {
     private TokenType type;
     private String token;
     private boolean verified;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private AppUser appUser;
 }
