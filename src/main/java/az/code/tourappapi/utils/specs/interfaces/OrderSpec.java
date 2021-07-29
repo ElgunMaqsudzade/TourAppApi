@@ -8,12 +8,19 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 
-public interface SpecService {
+public interface OrderSpec {
     Specification<Order> afterThan(LocalDateTime date);
 
-    Specification<Order> archived(Boolean value, AppUser user);
+    Specification<Order> expired(Boolean value);
+
+    Specification<Order> archive(Boolean value);
+
+    Specification<Order> onlyOffered(Boolean value);
+
+
+    Specification<Order> forUser(AppUser user);
+
+    Specification<Order> forId(Long orderId);
 
     Specification<Order> exclude(OrderStatus status);
-
-    Specification<Offer> byOrderId(Long orderId);
 }

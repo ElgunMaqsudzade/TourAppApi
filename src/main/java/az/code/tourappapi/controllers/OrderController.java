@@ -33,6 +33,14 @@ public class OrderController {
     }
 
 
+    @RequestMapping(path = "/offered", method = RequestMethod.GET)
+    public ResponseEntity<?> getOfferedOrders(@RequestAttribute("user") AppUser user,
+                                       @RequestParam Integer page,
+                                       @RequestParam Integer size) {
+        return new ResponseEntity<>(orderService.findAllOffered(user, page, size), HttpStatus.OK);
+    }
+
+
     @RequestMapping(path = "/{id}/offer", method = RequestMethod.GET)
     public ResponseEntity<PaginationDTO<OfferDTO>> getOffers(@RequestAttribute("user") AppUser user,
                                                              @PathVariable Long id,
@@ -56,10 +64,13 @@ public class OrderController {
         return new ResponseEntity<>(orderService.findAllArchived(user, page, size), HttpStatus.OK);
     }
 
-//    @RequestMapping(path = "/archive/{id}", method = RequestMethod.POST)
-//    public ResponseEntity<OrderDTO> archiveOrder(@PathVariable Long id) {
-//        return new ResponseEntity<>(orderService.archive(id), HttpStatus.OK);
-//    }
+    @RequestMapping(path = "/archive/{id}", method = RequestMethod.POST)
+    public ResponseEntity<OrderDTO> archiveOrder(@RequestAttribute("user") AppUser user,
+                                                 @PathVariable Long id,
+                                                 @RequestParam Boolean archive) {
+        orderService.archive(user, id, archive);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @RabbitListener(queues = RabbitMQConfig.subscription)
     public void saveOrders(Map<String, String> map) {

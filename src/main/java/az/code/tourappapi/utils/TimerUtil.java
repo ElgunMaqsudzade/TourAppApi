@@ -1,5 +1,6 @@
 package az.code.tourappapi.utils;
 
+import az.code.tourappapi.configs.AppConfig;
 import az.code.tourappapi.configs.BasicConfig;
 import az.code.tourappapi.models.dtos.TimerInfoDTO;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class TimerUtil {
-    private final BasicConfig config;
+    private final AppConfig conf;
 
     public static JobDetail buildJobDetail(Class<? extends Job> jobClass, TimerInfoDTO infoDTO) {
         JobDataMap jobDataMap = new JobDataMap();
@@ -65,4 +66,8 @@ public class TimerUtil {
 //        Integer seconds = localTime.getSecond();
 //        return String.format("%s %s %s * * ?", seconds, mins, hrs);
 //    }
+
+    public Long offsetMS() {
+        return conf.getDurationHour() * 60 * 60 * 1000;
+    }
 }
