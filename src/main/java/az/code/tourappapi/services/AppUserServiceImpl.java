@@ -3,28 +3,21 @@ package az.code.tourappapi.services;
 
 import az.code.tourappapi.daos.interfaces.AppUserDAO;
 import az.code.tourappapi.exceptions.ConflictException;
-import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.AppUserOrder;
 import az.code.tourappapi.models.AppUser_;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.dtos.AppUserDTO;
 import az.code.tourappapi.models.enums.OrderStatus;
-import az.code.tourappapi.models.identifiers.AppUserOrderId;
 import az.code.tourappapi.services.interfaces.AppUserService;
 import az.code.tourappapi.utils.ModelMapperUtil;
-import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor

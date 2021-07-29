@@ -17,5 +17,5 @@ public interface OfferService {
 
     PaginationDTO<OfferDTO> findAll(@NotNull AppUser user, Integer page, Integer size);
 
-    PaginationDTO<OfferDTO> findAll(@NotNull AppUser user, Long orderId, Integer page, Integer size);
+    PaginationDTO<OfferDTO> findAll(@NotNull AppUser user, @NotNull Long orderId, Integer page, Integer size);
 }

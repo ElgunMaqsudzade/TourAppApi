@@ -1,33 +1,32 @@
 package az.code.tourappapi.services;
 
 import az.code.tourappapi.configs.AppConfig;
-import az.code.tourappapi.daos.interfaces.AppUserDAO;
 import az.code.tourappapi.daos.interfaces.OfferDAO;
 import az.code.tourappapi.daos.interfaces.OrderDAO;
-import az.code.tourappapi.exceptions.BadRequestException;
 import az.code.tourappapi.exceptions.ConflictException;
-import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.*;
 import az.code.tourappapi.models.dtos.OfferDTO;
 import az.code.tourappapi.models.dtos.PaginationDTO;
 import az.code.tourappapi.services.interfaces.AppUserService;
 import az.code.tourappapi.services.interfaces.OfferService;
 import az.code.tourappapi.utils.ModelMapperUtil;
+import az.code.tourappapi.utils.specs.interfaces.SpecService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OfferServiceImpl implements OfferService {
-    private final OfferDAO offerDAO;
-    private final AppUserService userService;
     private final AppConfig conf;
+    private final SpecService specService;
+    private final OfferDAO offerDAO;
     private final OrderDAO orderDAO;
+    private final AppUserService userService;
     private final ModelMapperUtil mapperUtil;
 
     @Override
@@ -66,8 +65,9 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public PaginationDTO<OfferDTO> findAll(@NotNull AppUser user, Long orderId, Integer page, Integer size) {
-        Page<Offer> p = offerDAO.findAll(PageRequest.of(page, size));
+    public PaginationDTO<OfferDTO> findAll(@NotNull AppUser user,@NotNull Long orderId, Integer page, Integer size) {
+        Specification<Offer> spec = specService.byOrderId(orderId);
+        Page<Offer> p = offerDAO.findAll(spec, PageRequest.of(page, size));
         return mapperUtil.toPagination(p, OfferDTO.class);
     }
 }
