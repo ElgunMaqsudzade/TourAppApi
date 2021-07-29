@@ -4,7 +4,8 @@ import az.code.tourappapi.daos.interfaces.OfferDAO;
 import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.Offer;
 import az.code.tourappapi.repos.OfferRepo;
-import az.code.tourappapi.utils.specs.interfaces.SpecService;
+import az.code.tourappapi.utils.specs.interfaces.OfferSpec;
+import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OfferDAOImpl implements OfferDAO {
     private final OfferRepo offerRepo;
-    private final SpecService specService;
+    private final OfferSpec offerSpec;
 
     @Override
     public Offer save(@NotNull Offer offer) {
@@ -51,7 +52,7 @@ public class OfferDAOImpl implements OfferDAO {
 
     @Override
     public boolean existsByOrderId(@NotNull Long orderId) {
-        return offerRepo.findAll(specService.byOrderId(orderId), PageRequest.of(0, 1))
+        return offerRepo.findAll(offerSpec.byOrderId(orderId), PageRequest.of(0, 1))
                 .stream()
                 .findAny()
                 .isPresent();

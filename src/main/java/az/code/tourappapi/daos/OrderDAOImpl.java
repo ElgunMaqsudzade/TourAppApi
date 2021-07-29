@@ -31,11 +31,21 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public Order find(@NotNull Long id) {
-        Optional<Order> order = orderRepo.findById(id);
+    public Order find(Long orderId) {
+        Optional<Order> order = orderRepo.findById(orderId);
         if (order.isEmpty()) throw new DataNotFound("Order not found in database");
 
         return order.get();
+    }
+
+    @Override
+    public Optional<Order> find(@NotNull Specification<Order> spec) {
+        return orderRepo.findOne(spec);
+    }
+
+    @Override
+    public void archive(Long userId, Long orderId, Boolean archive) {
+        orderRepo.archive(userId, orderId, archive);
     }
 
     @Override

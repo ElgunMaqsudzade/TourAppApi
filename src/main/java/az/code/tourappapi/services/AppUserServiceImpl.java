@@ -39,11 +39,11 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public void addOrder(@NotNull AppUser user, @NotNull Order order) {
+    public void addOrder(@NotNull AppUser user, @NotNull Order order,@NotNull OrderStatus status) {
         user.getAppUserOrders().add(AppUserOrder.builder()
                 .order(order)
                 .appUser(user)
-                .status(OrderStatus.OFFERED)
+                .status(status)
                 .archived(false)
                 .build());
         userDAO.save(user);

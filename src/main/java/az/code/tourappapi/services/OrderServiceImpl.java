@@ -1,5 +1,6 @@
 package az.code.tourappapi.services;
 
+import az.code.tourappapi.components.SchedulerExecutor;
 import az.code.tourappapi.configs.AppConfig;
 import az.code.tourappapi.daos.interfaces.OrderDAO;
 import az.code.tourappapi.models.AppUser;
@@ -10,7 +11,7 @@ import az.code.tourappapi.models.dtos.PaginationDTO;
 import az.code.tourappapi.models.enums.OrderStatus;
 import az.code.tourappapi.services.interfaces.OrderService;
 import az.code.tourappapi.utils.ModelMapperUtil;
-import az.code.tourappapi.utils.specs.interfaces.SpecService;
+import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,63 +26,68 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderDAO orderDAO;
-    private final SpecService specService;
+    private final OrderSpec orderSpec;
     private final ModelMapperUtil util;
     private final AppConfig conf;
+    private final SchedulerExecutor sch;
 
     @Override
     public void create(@NotNull OrderDTO orderDTO) {
-        Order order = util.map(orderDTO, Order.class);
-        orderDAO.save(order.toBuilder().createDate(LocalDateTime.now()).build());
+        Order order = util.map(orderDTO, Order.class).toBuilder().createDate(LocalDateTime.now()).build();
+        orderDAO.save(order);
+        sch.runExpireOrderJob(order);
+        sch.runSendToAgentJob(order);
     }
 
     @Override
-    public OrderDTO update(@NotNull Long id, @NotNull OrderDTO orderDTO) {
-        Order order = util.map(orderDTO, Order.class);
-        return util.map(orderDAO.save(order.toBuilder().id(id).build()), OrderDTO.class);
-    }
-
-
-    @Override
-    public OrderDTO find(@NotNull AppUser user, @NotNull Long id) {
-        return util.map(orderDAO.find(id), OrderDTO.class);
+    public void archive(@NotNull AppUser user, @NotNull Long orderId, @NotNull Boolean archive) {
+        orderDAO.archive(user.getId(), orderId, archive);
     }
 
     @Override
     public PaginationDTO<OrderDTO> findAll(@NotNull AppUser user, Integer page, Integer size) {
-        return findAll(user, page, size, false);
+        return findAll(user, page, size, false, false);
+    }
+
+    @Override
+    public PaginationDTO<OrderDTO> findAllOffered(@NotNull AppUser user, Integer page, Integer size) {
+        return findAll(user, page, size, false, true);
     }
 
     @Override
     public PaginationDTO<OrderDTO> findAllArchived(@NotNull AppUser user, Integer page, Integer size) {
-        return findAll(user, page, size, true);
+        return findAll(user, page, size, true, false);
     }
 
-    private PaginationDTO<OrderDTO> findAll(@NotNull AppUser user, Integer page, Integer size, @NotNull Boolean archived) {
+    private PaginationDTO<OrderDTO> findAll(@NotNull AppUser user,
+                                            Integer page,
+                                            Integer size,
+                                            @NotNull Boolean archived,
+                                            @NotNull Boolean onlyOffered) {
         Specification<Order> spec = Specification
-                .where(specService.exclude(OrderStatus.EXPIRED))
-                .and(specService.archived(archived, user))
-                .and(specService.afterThan(user.getCreateDate()));
+                .where(orderSpec.exclude(OrderStatus.EXPIRED))
+                .and(orderSpec.archive(archived))
+                .and(orderSpec.forUser(user))
+                .and(orderSpec.onlyOffered(onlyOffered))
+                .and(orderSpec.afterThan(user.getCreateDate()));
 
         Page<Order> p = orderDAO.findAll(spec, PageRequest.of(page, size));
+
         PaginationDTO<OrderDTO> pOrder = util.toPagination(p, OrderDTO.class);
 
-        p.getContent().parallelStream()
-                .forEach(o -> pOrder.getItems()
-                        .parallelStream()
-                        .filter(i -> i.getId().equals(o.getId()))
-                        .findFirst()
-                        .ifPresent(i -> {
-                            i.setExpireTime(o.getCreateDate().plusHours(conf.getDurationHour()));
-                            if (o.getAppUserOrders().isEmpty())
-                                i.setOrderStatus(OrderStatus.NEW);
-                            else
-                                o.getAppUserOrders()
-                                        .parallelStream()
-                                        .map(AppUserOrder::getStatus)
-                                        .max(Comparator.comparing(OrderStatus::ordinal))
-                                        .ifPresent(i::setOrderStatus);
-                        }));
+        p.getContent().parallelStream().forEach(o -> pOrder.getItems()
+                .parallelStream()
+                .filter(i -> i.getId().equals(o.getId()))
+                .findFirst()
+                .ifPresent(i -> {
+                    i.setExpireTime(o.getCreateDate().plusHours(conf.getDurationHour()));
+                    o.getAppUserOrders()
+                            .parallelStream()
+                            .filter(e -> e.getAppUser().getId().equals(user.getId()))
+                            .map(AppUserOrder::getStatus)
+                            .max(Comparator.comparing(OrderStatus::ordinal))
+                            .ifPresent(i::setOrderStatus);
+                }));
         return pOrder;
     }
 }
