@@ -1,9 +1,7 @@
 package az.code.tourappapi.services;
 
 import az.code.tourappapi.configs.AppConfig;
-import az.code.tourappapi.configs.BasicConfig;
 import az.code.tourappapi.daos.interfaces.OrderDAO;
-import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.AppUserOrder;
 import az.code.tourappapi.models.Order;
@@ -12,8 +10,7 @@ import az.code.tourappapi.models.dtos.PaginationDTO;
 import az.code.tourappapi.models.enums.OrderStatus;
 import az.code.tourappapi.services.interfaces.OrderService;
 import az.code.tourappapi.utils.ModelMapperUtil;
-import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import az.code.tourappapi.utils.specs.interfaces.SpecService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,17 +19,13 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderDAO orderDAO;
-    private final OrderSpec orderSpec;
+    private final SpecService specService;
     private final ModelMapperUtil util;
     private final AppConfig conf;
 
@@ -56,10 +49,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PaginationDTO<OrderDTO> findAll(@NotNull AppUser user, Integer page, Integer size) {
+        return findAll(user, page, size, false);
+    }
+
+    @Override
+    public PaginationDTO<OrderDTO> findAllArchived(@NotNull AppUser user, Integer page, Integer size) {
+        return findAll(user, page, size, true);
+    }
+
+    private PaginationDTO<OrderDTO> findAll(@NotNull AppUser user, Integer page, Integer size, @NotNull Boolean archived) {
         Specification<Order> spec = Specification
-                .where(orderSpec.exclude(OrderStatus.EXPIRED))
-                .and(orderSpec.archived(false, user))
-                .and(orderSpec.afterThan(user.getCreateDate()));
+                .where(specService.exclude(OrderStatus.EXPIRED))
+                .and(specService.archived(archived, user))
+                .and(specService.afterThan(user.getCreateDate()));
 
         Page<Order> p = orderDAO.findAll(spec, PageRequest.of(page, size));
         PaginationDTO<OrderDTO> pOrder = util.toPagination(p, OrderDTO.class);

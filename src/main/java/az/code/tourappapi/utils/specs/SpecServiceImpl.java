@@ -4,7 +4,7 @@ package az.code.tourappapi.utils.specs;
 import az.code.tourappapi.models.*;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.enums.OrderStatus;
-import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
+import az.code.tourappapi.utils.specs.interfaces.SpecService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 
 @Component
-public class OrderSpecImpl implements OrderSpec {
+public class SpecServiceImpl implements SpecService {
     @Override
     public Specification<Order> afterThan(LocalDateTime date) {
         return (r, q, cb) -> cb.greaterThan(r.get(Order_.CREATE_DATE), date);
@@ -42,5 +42,10 @@ public class OrderSpecImpl implements OrderSpec {
 
             return cb.or(cb.notEqual(orderJoin.get(AppUserOrder_.STATUS), status), nullable);
         };
+    }
+
+    @Override
+    public Specification<Offer> byOrderId(Long orderId) {
+        return (r, q, cb) -> cb.equal(r.get(Offer_.ORDER).get(Order_.ID), orderId);
     }
 }

@@ -1,11 +1,9 @@
 package az.code.tourappapi.controllers;
 
-import az.code.tourappapi.components.SchedulerExecutor;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.enums.TokenType;
 import az.code.tourappapi.services.interfaces.KeycloakService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

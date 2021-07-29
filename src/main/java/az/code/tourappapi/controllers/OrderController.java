@@ -53,13 +53,13 @@ public class OrderController {
     public ResponseEntity<PaginationDTO<OrderDTO>> getArchivedOrders(@RequestAttribute("user") AppUser user,
                                                                      @RequestParam Integer page,
                                                                      @RequestParam Integer size) {
-        return new ResponseEntity<>(orderService.findAll(user, page, size), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.findAllArchived(user, page, size), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/archive/{id}", method = RequestMethod.POST)
-    public ResponseEntity<PaginationDTO<OrderDTO>> archiveOrder(@PathVariable Long id) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @RequestMapping(path = "/archive/{id}", method = RequestMethod.POST)
+//    public ResponseEntity<OrderDTO> archiveOrder(@PathVariable Long id) {
+//        return new ResponseEntity<>(orderService.archive(id), HttpStatus.OK);
+//    }
 
     @RabbitListener(queues = RabbitMQConfig.subscription)
     public void saveOrders(Map<String, String> map) {
