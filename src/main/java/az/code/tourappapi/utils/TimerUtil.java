@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.quartz.*;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,20 +53,11 @@ public class TimerUtil {
     }
 
 
-//    public boolean isAppropriate() {
-//        LocalTime start = config.getOffer().getTime().getStart();
-//        LocalTime end = config.getOffer().getTime().getEnd();
-//        return LocalTime.now().isAfter(start) && LocalTime.now().isBefore(end);
-//    }
-//
-//
-//    public String toCron() {
-//        LocalTime localTime = config.getOffer().getTime().getStart();
-//        Integer hrs = localTime.getHour();
-//        Integer mins = localTime.getMinute();
-//        Integer seconds = localTime.getSecond();
-//        return String.format("%s %s %s * * ?", seconds, mins, hrs);
-//    }
+    public boolean isAppropriate() {
+        LocalTime start = conf.getWorkHours().getStart();
+        LocalTime end = conf.getWorkHours().getEnd();
+        return LocalTime.now().isAfter(start) && LocalTime.now().isBefore(end);
+    }
 
     public Long offsetMS() {
         return conf.getDurationHour() * 60 * 60 * 1000;
