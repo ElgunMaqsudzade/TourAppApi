@@ -6,6 +6,7 @@ import az.code.tourappapi.daos.interfaces.OfferDAO;
 import az.code.tourappapi.daos.interfaces.OrderDAO;
 import az.code.tourappapi.exceptions.ConflictException;
 import az.code.tourappapi.exceptions.DataNotFound;
+import az.code.tourappapi.exceptions.ForbiddenException;
 import az.code.tourappapi.models.*;
 import az.code.tourappapi.models.dtos.OfferDTO;
 import az.code.tourappapi.models.dtos.PaginationDTO;
@@ -13,6 +14,7 @@ import az.code.tourappapi.models.enums.OrderStatus;
 import az.code.tourappapi.services.interfaces.AppUserService;
 import az.code.tourappapi.services.interfaces.OfferService;
 import az.code.tourappapi.utils.ModelMapperUtil;
+import az.code.tourappapi.utils.TimerUtil;
 import az.code.tourappapi.utils.specs.interfaces.OfferSpec;
 import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.NotAllowedException;
 import java.util.Optional;
 
 @Service
@@ -34,21 +37,33 @@ public class OfferServiceImpl implements OfferService {
     private final OrderDAO orderDAO;
     private final AppUserService userService;
     private final ModelMapperUtil mapperUtil;
+    private final TimerUtil timerUtil;
 
     @Override
     public OfferDTO create(@NotNull AppUser user, @NotNull Long orderId, @NotNull OfferDTO offerDTO) {
         if (conf.getOnetimeOnly() && offerDAO.existsByOrderId(orderId))
             throw new ConflictException();
 
+        if (!timerUtil.isAppropriate())
+            throw new ForbiddenException();
+
         Optional<Order> order = orderDAO
-                .find(Specification.where(orderSpec.expired(false).and(orderSpec.forId(orderId))));
+                .find(Specification
+                        .where(orderSpec.expired(false)
+                                .and(orderSpec.forId(orderId))));
 
         order.ifPresentOrElse(i -> userService.addOrder(user, i, OrderStatus.OFFERED), () -> {
             throw new DataNotFound();
         });
-        ;
-        Offer offer = mapperUtil.map(offerDTO, Offer.class);
-        return mapperUtil.map(offerDAO.save(offer.toBuilder().appUser(user).order(order.get()).build()), OfferDTO.class);
+
+        Offer offer = offerDAO.save(mapperUtil.map(offerDTO, Offer.class)
+                .toBuilder()
+                .appUser(user)
+                .order(order.get())
+                .build());
+
+
+        return mapperUtil.map(offer, OfferDTO.class);
     }
 
     @Override

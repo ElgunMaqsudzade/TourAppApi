@@ -58,3 +58,6 @@ keycloak-admin:
 app:
   duration-hour: 24
   onetime-only: true
+  work-hours:
+    end: '19:00'
+    start: '09:00'

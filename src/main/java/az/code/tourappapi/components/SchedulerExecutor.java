@@ -30,7 +30,7 @@ public class SchedulerExecutor {
     public void runExpireOrderJob(Order order) {
         System.out.println(order.getId());
         scheduler.schedule(ExpireOrderJob.class, TimerInfoDTO.builder()
-                .offsetMS(2000)
+                .offsetMS(util.offsetMS())
                 .fireCount(1)
                 .data(order)
                 .build());
