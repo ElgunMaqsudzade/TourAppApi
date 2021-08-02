@@ -19,7 +19,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: backend.ended@gmail.com
-    password: Salam123
+    password: lpihwmobszrbygzg
     properties:
       mail:
         transport:
