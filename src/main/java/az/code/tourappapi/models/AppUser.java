@@ -1,14 +1,10 @@
 package az.code.tourappapi.models;
 
-import az.code.tourappapi.models.enums.OrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Getter

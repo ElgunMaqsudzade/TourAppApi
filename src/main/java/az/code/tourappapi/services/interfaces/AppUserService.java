@@ -1,6 +1,7 @@
 package az.code.tourappapi.services.interfaces;
 
 import az.code.tourappapi.models.AppUser;
+import az.code.tourappapi.models.Offer;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.dtos.AppUserDTO;
 import az.code.tourappapi.models.enums.OrderStatus;
@@ -14,7 +15,7 @@ public interface AppUserService {
 
     AppUserDTO create(@NotNull AppUserDTO appUser);
 
-    void addOrder(@NotNull AppUser user, @NotNull Order order, @NotNull OrderStatus status);
+    void addOrder(@NotNull AppUser user, @NotNull Order order, @NotNull Offer offer, @NotNull OrderStatus status);
 
     void delete(@NotNull Long id);
 

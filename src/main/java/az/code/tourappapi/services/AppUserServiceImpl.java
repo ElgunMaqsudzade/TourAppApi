@@ -3,10 +3,7 @@ package az.code.tourappapi.services;
 
 import az.code.tourappapi.daos.interfaces.AppUserDAO;
 import az.code.tourappapi.exceptions.ConflictException;
-import az.code.tourappapi.models.AppUser;
-import az.code.tourappapi.models.AppUserOrder;
-import az.code.tourappapi.models.AppUser_;
-import az.code.tourappapi.models.Order;
+import az.code.tourappapi.models.*;
 import az.code.tourappapi.models.dtos.AppUserDTO;
 import az.code.tourappapi.models.enums.OrderStatus;
 import az.code.tourappapi.services.interfaces.AppUserService;
@@ -39,10 +36,11 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public void addOrder(@NotNull AppUser user, @NotNull Order order,@NotNull OrderStatus status) {
+    public void addOrder(@NotNull AppUser user, @NotNull Order order, @NotNull Offer offer, @NotNull OrderStatus status) {
         user.getAppUserOrders().add(AppUserOrder.builder()
                 .order(order)
                 .appUser(user)
+                .offer(offer)
                 .status(status)
                 .archived(false)
                 .build());

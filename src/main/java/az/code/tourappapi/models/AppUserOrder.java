@@ -25,6 +25,9 @@ public class AppUserOrder {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Order order;
 
+    @OneToOne
+    private Offer offer;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

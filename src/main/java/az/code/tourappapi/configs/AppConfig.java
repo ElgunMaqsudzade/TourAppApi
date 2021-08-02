@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.swing.text.StyleConstants;
+import java.awt.*;
 import java.time.LocalTime;
 
 @Data
@@ -14,6 +16,8 @@ public class AppConfig {
     private Long durationHour;
     private Boolean onetimeOnly;
     private WorkHours workHours;
+    private ImageProps image;
+    private String source;
 
     @Data
     public static class WorkHours{
@@ -21,5 +25,14 @@ public class AppConfig {
         private LocalTime start;
         @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
         private LocalTime end;
+    }
+
+    @Data
+    public static class ImageProps{
+       private String root;
+       private String defaultFile;
+       private String extension;
+       private Integer size;
+       private Integer style;
     }
 }

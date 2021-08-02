@@ -1,11 +1,10 @@
-package az.code.tourappapi.utils.specs;
+package az.code.tourappapi.components.specs;
 
 import az.code.tourappapi.configs.AppConfig;
 import az.code.tourappapi.models.Offer;
 import az.code.tourappapi.models.Offer_;
-import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.Order_;
-import az.code.tourappapi.utils.specs.interfaces.OfferSpec;
+import az.code.tourappapi.components.specs.interfaces.OfferSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;

@@ -22,6 +22,6 @@ public class SendToAgentJob implements Job {
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         TimerInfoDTO<Order> infoDTO = (TimerInfoDTO<Order>) ctx.getJobDetail().getJobDataMap().get(SendToAgentJob.class.getSimpleName());
         Order order = infoDTO.getData();
-        userRepo.findAll().parallelStream().forEach(i -> userService.addOrder(i, order, OrderStatus.NEW));
+        userRepo.findAll().parallelStream().forEach(i -> userService.addOrder(i, order, null, OrderStatus.NEW));
     }
 }

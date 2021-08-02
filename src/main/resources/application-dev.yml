@@ -60,5 +60,12 @@ app:
   duration-hour: 24
   onetime-only: true
   work-hours:
-    end: '19:00'
-    start: '09:00'
+    end: '23:00'
+    start: '08:00'
+  image:
+    extension: png
+    root: src/main/resources/images
+    size: 30
+    style: 0
+    default-file: src/main/resources/images/Default.png
+  source: messages

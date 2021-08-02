@@ -15,8 +15,8 @@ import az.code.tourappapi.services.interfaces.AppUserService;
 import az.code.tourappapi.services.interfaces.OfferService;
 import az.code.tourappapi.utils.ModelMapperUtil;
 import az.code.tourappapi.utils.TimerUtil;
-import az.code.tourappapi.utils.specs.interfaces.OfferSpec;
-import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
+import az.code.tourappapi.components.specs.interfaces.OfferSpec;
+import az.code.tourappapi.components.specs.interfaces.OrderSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +24,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.NotAllowedException;
 import java.util.Optional;
 
 @Service
@@ -38,6 +37,7 @@ public class OfferServiceImpl implements OfferService {
     private final AppUserService userService;
     private final ModelMapperUtil mapperUtil;
     private final TimerUtil timerUtil;
+    private final SchedulerExecutor sch;
 
     @Override
     public OfferDTO create(@NotNull AppUser user, @NotNull Long orderId, @NotNull OfferDTO offerDTO) {
@@ -52,9 +52,9 @@ public class OfferServiceImpl implements OfferService {
                         .where(orderSpec.expired(false)
                                 .and(orderSpec.forId(orderId))));
 
-        order.ifPresentOrElse(i -> userService.addOrder(user, i, OrderStatus.OFFERED), () -> {
+        if (order.isEmpty()) {
             throw new DataNotFound();
-        });
+        }
 
         Offer offer = offerDAO.save(mapperUtil.map(offerDTO, Offer.class)
                 .toBuilder()
@@ -62,6 +62,9 @@ public class OfferServiceImpl implements OfferService {
                 .order(order.get())
                 .build());
 
+        userService.addOrder(user, order.get(), offer, OrderStatus.OFFERED);
+
+        sch.runSendToSubscriberJob(offer);
 
         return mapperUtil.map(offer, OfferDTO.class);
     }
