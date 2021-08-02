@@ -63,7 +63,7 @@ app:
     start: '09:00'
   image:
     extension: png
-    root: src/main/resources/images
+    root: images
     size: 30
     style: 0
-    default-file: src/main/resources/images/Default.png
+    default-file: images/Default.png

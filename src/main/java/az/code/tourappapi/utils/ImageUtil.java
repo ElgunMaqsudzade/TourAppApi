@@ -1,6 +1,7 @@
 package az.code.tourappapi.utils;
 
 import az.code.tourappapi.configs.AppConfig;
+import az.code.tourappapi.exceptions.DataNotFound;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +13,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.Properties;
 import java.util.UUID;
 
 @Slf4j
@@ -38,11 +41,10 @@ public class ImageUtil {
     @SneakyThrows
     public BufferedImage getDefaultBI() {
         String root = conf.getImage().getDefaultFile();
-        File file = new File(root);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        return ImageIO.read(file);
+        ClassLoader cl = this.getClass().getClassLoader();
+        InputStream inputStream = cl.getResourceAsStream(root);
+        if (inputStream == null) throw new DataNotFound("Input stream not found");
+        return ImageIO.read(inputStream);
     }
 
     @SneakyThrows

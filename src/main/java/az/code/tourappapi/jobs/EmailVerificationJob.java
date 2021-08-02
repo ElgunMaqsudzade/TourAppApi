@@ -9,14 +9,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.quartz.*;
 
+import java.io.InputStream;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 @RequiredArgsConstructor
 @PersistJobDataAfterExecution
 public class EmailVerificationJob implements Job {
     private final EmailSender sender;
-    private static final String messages = "messages";
+    private static final String messages = "messages.properties";
     private static final String verifyToken = "verifyToken";
     private static final String subject = "subject";
 
@@ -26,10 +28,15 @@ public class EmailVerificationJob implements Job {
         TimerInfoDTO<Token> infoDTO = (TimerInfoDTO<Token>) ctx.getJobDetail().getJobDataMap().get(EmailVerificationJob.class.getSimpleName());
         Token token = infoDTO.getData();
         AppUser user = token.getAppUser();
-        ResourceBundle rb = ResourceBundle.getBundle(messages, Locale.ENGLISH);
+
+
+        ClassLoader cl = this.getClass().getClassLoader();
+        InputStream inputStream = cl.getResourceAsStream(messages);
+        Properties props = new Properties();
+        props.load(inputStream);
 
         sender.sendEmail(user.getEmail(),
-                rb.getString(subject) + " " + user.getFirstName(),
-                rb.getString(verifyToken)+ " " + token.getToken());
+                props.getProperty(subject) + " " + user.getFirstName(),
+                props.getProperty(verifyToken)+ " " + token.getToken());
     }
 }

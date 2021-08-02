@@ -19,7 +19,9 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import static az.code.tourappapi.utils.ImageUtil.toCapitalize;
@@ -33,6 +35,7 @@ public class SendToSubscriberJob implements Job {
     private final AppConfig conf;
 
 
+    private static final String messages = "messages.properties";
     @SneakyThrows
     @Override
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
@@ -51,11 +54,15 @@ public class SendToSubscriberJob implements Job {
         imageUtil.addText(image, toFormat(offer.getTravelEndDate()), Color.BLACK, 900, 1050, Font.PLAIN, 24);
         imageUtil.addText(image, String.valueOf(Math.round(offer.getPrice())), Color.BLACK, 670, 1250, Font.PLAIN, 24);
 
-        ResourceBundle res = ResourceBundle.getBundle(conf.getSource(), Locale.ENGLISH);
+        ClassLoader cl = this.getClass().getClassLoader();
+        InputStream inputStream = cl.getResourceAsStream(messages);
+        Properties props = new Properties();
+        props.load(inputStream);
+
         MessageDTO messageDTO = MessageDTO
                 .builder()
                 .id(offer.getId())
-                .message(res.getString("offerCaption") + offer.getId())
+                .message(props.getProperty("offerCaption") + offer.getId())
                 .UUID(offer.getOrder().getTelegramIdentifier())
                 .fileAsBytes(imageUtil.toByteArray(image))
                 .build();
