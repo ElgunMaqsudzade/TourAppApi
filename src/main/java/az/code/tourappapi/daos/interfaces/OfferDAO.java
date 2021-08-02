@@ -15,6 +15,8 @@ public interface OfferDAO {
 
     void delete(@NotNull Long id);
 
+    Offer find(@NotNull Long id);
+
     Offer find(@NotNull Long id, @NotNull Long userId);
 
     boolean existsByOrderId(@NotNull Long orderId);

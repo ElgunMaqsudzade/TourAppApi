@@ -1,7 +1,6 @@
-package az.code.tourappapi.utils.specs.interfaces;
+package az.code.tourappapi.components.specs.interfaces;
 
 import az.code.tourappapi.models.AppUser;
-import az.code.tourappapi.models.Offer;
 import az.code.tourappapi.models.Order;
 import az.code.tourappapi.models.enums.OrderStatus;
 import org.springframework.data.jpa.domain.Specification;

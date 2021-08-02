@@ -1,6 +1,6 @@
 spring:
-  profiles:
-    active: dev
+#  profiles:
+#    active: dev
   jpa:
     hibernate:
       ddl-auto: update
@@ -9,8 +9,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: 'http://localhost:8081/auth/realms/traveller/protocol/openid-connect/certs'
-          issuer-uri: 'http://localhost:8081/auth/realms/traveller'
+          jwk-set-uri: 'https://keycloak-testion.herokuapp.com/auth/realms/traveller/protocol/openid-connect/certs'
+          issuer-uri: 'https://keycloak-testion.herokuapp.com/auth/realms/traveller'
   servlet:
     multipart:
       max-file-size: 10MB
@@ -38,12 +38,12 @@ spring:
 
 
 keycloak:
-  auth-server-url: http://localhost:8081/auth/
+  auth-server-url: https://keycloak-testion.herokuapp.com/auth/
   ssl-required: external
   realm: traveller
   resource: tour-app
   credentials:
-    secret: b81adc70-34f9-4d83-8b3f-ce6521ce5599
+    secret: 28cdb878-a1b2-4c1d-898f-c7290f8b4b3b
   bearer-only: true
   principal-attribute: preferred_username
 
@@ -61,3 +61,9 @@ app:
   work-hours:
     end: '19:00'
     start: '09:00'
+  image:
+    extension: png
+    root: src/main/resources/images
+    size: 30
+    style: 0
+    default-file: src/main/resources/images/Default.png

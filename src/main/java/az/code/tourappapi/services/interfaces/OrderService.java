@@ -3,6 +3,7 @@ package az.code.tourappapi.services.interfaces;
 import az.code.tourappapi.models.AppUser;
 import az.code.tourappapi.models.dtos.OrderDTO;
 import az.code.tourappapi.models.dtos.PaginationDTO;
+import az.code.tourappapi.models.enums.OrderStatus;
 
 import javax.validation.constraints.NotNull;
 

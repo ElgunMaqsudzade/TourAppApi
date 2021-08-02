@@ -31,6 +31,10 @@ public class Offer {
     @Length(max = 9)
     @Positive
     private Double price;
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
+    private Client client;
+    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
+    private AppUserOrder appUserOrder;
     @ManyToOne(fetch = FetchType.EAGER)
     private AppUser appUser;
     @ManyToOne

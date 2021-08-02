@@ -39,6 +39,7 @@ public class BasicConfig {
     @Bean
     public ModelMapper getModelMapper() {
         ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setAmbiguityIgnored(true);
         mapper.addConverter(localDateConverter());
         mapper.addConverter(localDateTimeConverter());
         return mapper;

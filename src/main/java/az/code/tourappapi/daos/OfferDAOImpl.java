@@ -4,8 +4,7 @@ import az.code.tourappapi.daos.interfaces.OfferDAO;
 import az.code.tourappapi.exceptions.DataNotFound;
 import az.code.tourappapi.models.Offer;
 import az.code.tourappapi.repos.OfferRepo;
-import az.code.tourappapi.utils.specs.interfaces.OfferSpec;
-import az.code.tourappapi.utils.specs.interfaces.OrderSpec;
+import az.code.tourappapi.components.specs.interfaces.OfferSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +29,14 @@ public class OfferDAOImpl implements OfferDAO {
     @Override
     public void delete(@NotNull Long id) {
         offerRepo.deleteById(id);
+    }
+
+    @Override
+    public Offer find(Long id) {
+        Optional<Offer> offer = offerRepo.findById(id);
+        if (offer.isEmpty()) throw new DataNotFound("Offer not found in database");
+
+        return offer.get();
     }
 
     @Override

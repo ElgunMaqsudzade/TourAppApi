@@ -1,4 +1,4 @@
-package az.code.tourappapi.utils.specs.interfaces;
+package az.code.tourappapi.components.specs.interfaces;
 
 import az.code.tourappapi.models.Offer;
 import org.springframework.data.jpa.domain.Specification;

@@ -32,5 +32,6 @@ public class OfferDTO implements Serializable {
     private LocalDateTime travelEndDate;
     @Length(max = 9)
     @Positive
+    @NotNull
     private Double price;
 }
