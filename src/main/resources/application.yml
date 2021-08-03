@@ -67,3 +67,4 @@ app:
     size: 30
     style: 0
     default-file: images/Default.png
+  source: messages
