@@ -7,5 +7,7 @@ public interface OfferSpec {
 
     Specification<Offer> expired(Boolean value);
 
+    Specification<Offer> byUserId(Long userId);
+
     Specification<Offer> byOrderId(Long orderId);
 }

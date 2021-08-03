@@ -101,6 +101,7 @@ public class OfferServiceImpl implements OfferService {
     public PaginationDTO<OfferDTO> findAll(@NotNull AppUser user, Long orderId, Integer page, Integer size) {
         Specification<Offer> spec = Specification
                 .where(offerSpec.byOrderId(orderId)
+                        .and(offerSpec.byUserId(user.getId()))
                         .and(offerSpec.expired(false)));
         Page<Offer> p = offerDAO.findAll(spec, PageRequest.of(page, size));
 

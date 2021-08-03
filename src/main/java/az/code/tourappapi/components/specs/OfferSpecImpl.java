@@ -1,6 +1,7 @@
 package az.code.tourappapi.components.specs;
 
 import az.code.tourappapi.configs.AppConfig;
+import az.code.tourappapi.models.AppUser_;
 import az.code.tourappapi.models.Offer;
 import az.code.tourappapi.models.Offer_;
 import az.code.tourappapi.models.Order_;
@@ -21,6 +22,11 @@ public class OfferSpecImpl implements OfferSpec {
     public Specification<Offer> expired(Boolean value) {
         return (r, q, cb) -> !value ? cb.greaterThan(r.get(Offer_.ORDER).get(Order_.CREATE_DATE),
                 LocalDateTime.now().minusHours(conf.getDurationHour())) : cb.conjunction();
+    }
+
+    @Override
+    public Specification<Offer> byUserId(Long userId) {
+        return (r, q, cb) -> cb.equal(r.get(Offer_.APP_USER).get(AppUser_.ID), userId);
     }
 
 
