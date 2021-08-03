@@ -55,7 +55,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{dev_url}}/api/v1/order/1/offer?page=0&size=10",
+							"raw": "{{dev_url}}/api/v1/order/26/offer?page=0&size=10",
 							"host": [
 								"{{dev_url}}"
 							],
@@ -63,7 +63,7 @@
 								"api",
 								"v1",
 								"order",
-								"1",
+								"26",
 								"offer"
 							],
 							"query": [
@@ -87,7 +87,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\":\"salam\",\r\n    \"travelStartDate\":\"2000-08-01T00:00\",\r\n    \"travelEndDate\":\"2000-08-01T00:00\",\r\n    \"locations\":\"Qebele\",\r\n    \"price\":20\r\n}",
+							"raw": "{\r\n    \"description\":\"Narmalni yerdi bro\",\r\n    \"travelStartDate\":\"2000-08-01T00:00\",\r\n    \"travelEndDate\":\"2000-08-01T00:00\",\r\n    \"locations\":\"Xezer\",\r\n    \"price\":190\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -95,7 +95,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{dev_url}}/api/v1/order/6/offer",
+							"raw": "{{dev_url}}/api/v1/order/7/offer",
 							"host": [
 								"{{dev_url}}"
 							],
@@ -103,7 +103,7 @@
 								"api",
 								"v1",
 								"order",
-								"6",
+								"7",
 								"offer"
 							]
 						}
@@ -268,7 +268,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"company\":\"sa\",\r\n    \"firstName\":\"Elgun\",\r\n    \"lastName\":\"Maqsudzade\",\r\n    \"email\":\"elgun.maqsudzade@gmail.com\",\r\n    \"password\":\"salam123\"\r\n}",
+							"raw": "{\r\n    \"company\":\"sa\",\r\n    \"firstName\":\"Elgun\",\r\n    \"lastName\":\"Maqsudzade\",\r\n    \"email\":\"elgunvm@code.edu.az\",\r\n    \"password\":\"salam123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -490,6 +490,110 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Agent1",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"elgun.maqsudzade@gmail.com\",\r\n    \"password\":\"salam123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/auth/signIn",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signIn"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2cWptdFBRczU3czNDQU8wa19naEFIWk5zRmhENUFWR2p5WlQyUFRETWl3In0.eyJleHAiOjE2MjgwMjA5NTYsImlhdCI6MTYyNzk4NDk1NiwianRpIjoiODMxY2IxYjAtMDQyMi00MzhkLTg1MDgtNGM2MTY1MWZiYzVlIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay10ZXN0aW9uLmhlcm9rdWFwcC5jb20vYXV0aC9yZWFsbXMvdHJhdmVsbGVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjdjY2YyMmVhLThjMWEtNDQ2Ni05YWMxLTllNzRjMDExNDUwYiIsInR5cCI6IkJlYXJlciIsImF6cCI6InRvdXItYXBwIiwic2Vzc2lvbl9zdGF0ZSI6IjIxMDkzYjQxLThhZmUtNGMxMS1iY2JiLThjMmJmNzFiMjYyMCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly90b3VhcHBhcGkuaGVyb2t1YXBwLmNvbSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy10cmF2ZWxsZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiYXBwLXVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiIyMTA5M2I0MS04YWZlLTRjMTEtYmNiYi04YzJiZjcxYjI2MjAiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkVsZ3VuIE1hcXN1ZHphZGUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGd1bnZtQGNvZGUuZWR1LmF6IiwiZ2l2ZW5fbmFtZSI6IkVsZ3VuIiwiZmFtaWx5X25hbWUiOiJNYXFzdWR6YWRlIiwiZW1haWwiOiJlbGd1bnZtQGNvZGUuZWR1LmF6In0.OXdIRPlxq9caNAbPkEghZZ4JE9dcAd6VFWKJ6TUjthXUJ0YECogokkB3gg4xkaUFpHzqBY2m0OdqvxX9wdRvzKq0Ls4n8mOKW4tBwKhbFI0rVNJDAcgkflRLKsygF9kKPfBU8HyElJfWlOkfs6qbHVlGAdq0wRZg9nMR0Z4WaY8KjM6G0mNHhrE3C6OtCPuvub7Wfl-pnmH7qSH5UyboA6WwJ9L5o0ie6Yj_32SbeNDV3AklZ1ATeqtNek9ncbXeF255djN0DmDv6t1zAH0gUViFQ8y-awAPQ_P1jwF6w4QrTK-u0JgohCem6-I6fwGLTUoN1HLdQmcQKZjUKhSKvQ",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Agent2",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"elgunvm@code.edu.az\",\r\n    \"password\":\"salam123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/auth/signIn",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signIn"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -497,7 +601,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2cWptdFBRczU3czNDQU8wa19naEFIWk5zRmhENUFWR2p5WlQyUFRETWl3In0.eyJleHAiOjE2Mjc5NDE4NTgsImlhdCI6MTYyNzkwNTg1OCwianRpIjoiYmNiZDUwNzktZjg1My00ZTUxLTg1MjgtMWNkZDljODkzNTkzIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay10ZXN0aW9uLmhlcm9rdWFwcC5jb20vYXV0aC9yZWFsbXMvdHJhdmVsbGVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjdjY2YyMmVhLThjMWEtNDQ2Ni05YWMxLTllNzRjMDExNDUwYiIsInR5cCI6IkJlYXJlciIsImF6cCI6InRvdXItYXBwIiwic2Vzc2lvbl9zdGF0ZSI6IjY1MmIzZTgzLWMzZWItNGExNi04ZmUxLTk1MjIxYmRlYzk0YiIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly90b3VhcHBhcGkuaGVyb2t1YXBwLmNvbSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy10cmF2ZWxsZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiYXBwLXVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiI2NTJiM2U4My1jM2ViLTRhMTYtOGZlMS05NTIyMWJkZWM5NGIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkVsZ3VuIE1hcXN1ZHphZGUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGd1bnZtQGNvZGUuZWR1LmF6IiwiZ2l2ZW5fbmFtZSI6IkVsZ3VuIiwiZmFtaWx5X25hbWUiOiJNYXFzdWR6YWRlIiwiZW1haWwiOiJlbGd1bnZtQGNvZGUuZWR1LmF6In0.CkdYGzCV3y-BgSKIY55e9F7sFimWiEFfmPFunzGYmo-cZ24wbVJJ2pkF7bP2My5jlq-N09A9N2UPxSjlcSxfMCJSTOUTuiUUu2ElDOMq9xJ5dcZ-bRQ_xF4CcG8I1WHUxLgk8E_rgsfnDO65WoORTqCnLEFht-TMAkpEe1DcipCqKB8zeP5iIDYGHzHuQGndpWea1JCH6s9kJnKpjozvR7eqzeSQBZwsuW8RU8QMKvHPLQr5SS6B8ZwFyh60Bho-0EGkqv-MM97YbrmZ9ZayVuRwHN5uhh_8sRKeBD1YUotpm7eYQISAIqPxeCThDcw81h0WmH0cypCa5kanbDKKTQ",
+				"value": "{{token}}",
 				"type": "string"
 			}
 		]
@@ -530,6 +634,14 @@
 		{
 			"key": "pro_url",
 			"value": "https://tourappspring.herokuapp.com"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2cWptdFBRczU3czNDQU8wa19naEFIWk5zRmhENUFWR2p5WlQyUFRETWl3In0.eyJleHAiOjE2MjgwMjIwOTIsImlhdCI6MTYyNzk4NjA5MiwianRpIjoiZTdlNGVjZjAtOTliMi00ZWYwLTg3YWYtNTM2ZjZjNzIxMWIzIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay10ZXN0aW9uLmhlcm9rdWFwcC5jb20vYXV0aC9yZWFsbXMvdHJhdmVsbGVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjdjY2YyMmVhLThjMWEtNDQ2Ni05YWMxLTllNzRjMDExNDUwYiIsInR5cCI6IkJlYXJlciIsImF6cCI6InRvdXItYXBwIiwic2Vzc2lvbl9zdGF0ZSI6IjI5Mjg1ODJhLWE4OTYtNDk5Ni1hOGM3LTRiZmIzNTYwODViNyIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly90b3VhcHBhcGkuaGVyb2t1YXBwLmNvbSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy10cmF2ZWxsZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiYXBwLXVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiIyOTI4NTgyYS1hODk2LTQ5OTYtYThjNy00YmZiMzU2MDg1YjciLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkVsZ3VuIE1hcXN1ZHphZGUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGd1bnZtQGNvZGUuZWR1LmF6IiwiZ2l2ZW5fbmFtZSI6IkVsZ3VuIiwiZmFtaWx5X25hbWUiOiJNYXFzdWR6YWRlIiwiZW1haWwiOiJlbGd1bnZtQGNvZGUuZWR1LmF6In0.UbRbiFjBA8IJQWKvtQS9lGllvcG0LgQtM7CCM6Q614zeXxr1K-hJcEVZAI-nsO_RKAwAx87klGIOrdDSNsXa4Mt_aLIjyk9i0E9ifTsTPWKkpfnt966q8fy5c_eP5E0eBCAgdn_mPjtIyVM3pxg93EnjNll0dFbMw8uX3GqTvkUA3g-I5eBzTo79H7tz4gNMeCae7j7V0Bd8d-A8fzLQZeYLNIz7AAMNZAugpfqryD5q4gMaxaeKxivlkdcBjHS4UtJORrpZELVZ7ARKJGJoP2eA7y_C3eayy_Q2LaR16FFAgTfbMg5TbQx62vBkNeWcO4bEXGVvGlvCu9FKmYEn3g"
+		},
+		{
+			"key": "token2",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2cWptdFBRczU3czNDQU8wa19naEFIWk5zRmhENUFWR2p5WlQyUFRETWl3In0.eyJleHAiOjE2MjgwMjI5MzAsImlhdCI6MTYyNzk4NjkzMCwianRpIjoiMGI2ZDY4MjctYTMyNi00YmUwLWExMzYtMWVhMTdlNmU3Yjk1IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay10ZXN0aW9uLmhlcm9rdWFwcC5jb20vYXV0aC9yZWFsbXMvdHJhdmVsbGVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6Ijk3OWExN2VlLTUyNDQtNDcyNC1hNTVmLWRkOWFkZjIxZjZlZCIsInR5cCI6IkJlYXJlciIsImF6cCI6InRvdXItYXBwIiwic2Vzc2lvbl9zdGF0ZSI6IjM1MmEzNzIzLWE3ODgtNGQ4NC1iMGFjLWI0NDMxYzk5Zjk4OSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly90b3VhcHBhcGkuaGVyb2t1YXBwLmNvbSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy10cmF2ZWxsZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiYXBwLXVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiIzNTJhMzcyMy1hNzg4LTRkODQtYjBhYy1iNDQzMWM5OWY5ODkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkVsZ3VuIE1hcXN1ZHphZGUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGd1bi5tYXFzdWR6YWRlQGdtYWlsLmNvbSIsImdpdmVuX25hbWUiOiJFbGd1biIsImZhbWlseV9uYW1lIjoiTWFxc3VkemFkZSIsImVtYWlsIjoiZWxndW4ubWFxc3VkemFkZUBnbWFpbC5jb20ifQ.g2ASozgwlhFgRWC8PVj5hTNpDWPHeW76eQ0W4ceUs-V8YGyfVBuRAPP5pS51Lg1elng28xUMq7kiv1i63kZZ14RbBtO7mrxZyhsixJAQ-e1pv82l6qMU-egUBbXriuVsfm6QQ45oQgqYzMrTpPpcnnwR8NWqtePo6OyJLVJi3zPH6mx7GodG6_12d8cqChGL3MkLfWWSF27jN04VZC1rJTIckGBpduKPf-sojaX7A2aKSsF_x5oiPYwc9U2xo-u7d1_Gl7-ARS7QhVT3t-EotnxVe8vZaNpnr7ygucsq0eZCakHDsGYgh4sh-9wD0-7PBRyvA0njoLA8FO5hKbXBIA"
 		}
 	]
 }
