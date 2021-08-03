@@ -1,0 +1,535 @@
+{
+	"info": {
+		"_postman_id": "10a5ae76-2ea4-4850-a2fa-6fdf0e63dd34",
+		"name": "TravellerApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "GetOrders",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/order?page=0&size=10",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetOfferByOrder",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/order/1/offer?page=0&size=10",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"1",
+								"offer"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateOffer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"salam\",\r\n    \"travelStartDate\":\"2000-08-01T00:00\",\r\n    \"travelEndDate\":\"2000-08-01T00:00\",\r\n    \"locations\":\"Qebele\",\r\n    \"price\":20\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/order/6/offer",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"6",
+								"offer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetArchived",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "SendToArchive",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "GetOffered",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/order/offered?page=0&size=10",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"offered"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "RegisterToken",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/user/send-token?type=REGISTER",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"send-token"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "REGISTER"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RegisterVerifyToken",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/user/verify?token=6b4f7693-414a-4c04-b611-1bc4a9d474c7",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"verify"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "6b4f7693-414a-4c04-b611-1bc4a9d474c7"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "UpdatePassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"salam1234\",\r\n    \"newPassword\": \"salam123\",\r\n    \"repeatPassword\": \"salam123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/profile/update-password",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"update-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "CreateUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"company\":\"sa\",\r\n    \"firstName\":\"Elgun\",\r\n    \"lastName\":\"Maqsudzade\",\r\n    \"email\":\"elgun.maqsudzade@gmail.com\",\r\n    \"password\":\"salam123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/auth/register",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"elgunvm@code.edu.az\",\r\n    \"password\":\"salam123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/auth/signIn",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signIn"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\":\"elgunvm@code.edu.az\",\r\n   \"newPassword\":\"salam1234\",\r\n    \"repeatPassword\":\"salam1234\",\r\n    \"token\":\"a43185e8-6e27-453f-9dd5-d66fbbde0130\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dev_url}}/api/v1/auth/forgot-password",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendToken",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/auth/send-token?type=FORGOT&email=elgunvm@code.edu.az",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"send-token"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "FORGOT"
+								},
+								{
+									"key": "email",
+									"value": "elgunvm@code.edu.az"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VerifyToken",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/auth/verify-token?token=a43185e8-6e27-453f-9dd5-d66fbbde0130&email=elgunvm@code.edu.az",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"verify-token"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "a43185e8-6e27-453f-9dd5-d66fbbde0130"
+								},
+								{
+									"key": "email",
+									"value": "elgunvm@code.edu.az"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Offers",
+			"item": [
+				{
+					"name": "GetOffers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/offer?page=0&size=10",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"offer"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetClientDATA",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dev_url}}/api/v1/offer/2/client",
+							"host": [
+								"{{dev_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"offer",
+								"2",
+								"client"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2cWptdFBRczU3czNDQU8wa19naEFIWk5zRmhENUFWR2p5WlQyUFRETWl3In0.eyJleHAiOjE2Mjc5NDE4NTgsImlhdCI6MTYyNzkwNTg1OCwianRpIjoiYmNiZDUwNzktZjg1My00ZTUxLTg1MjgtMWNkZDljODkzNTkzIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay10ZXN0aW9uLmhlcm9rdWFwcC5jb20vYXV0aC9yZWFsbXMvdHJhdmVsbGVyIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjdjY2YyMmVhLThjMWEtNDQ2Ni05YWMxLTllNzRjMDExNDUwYiIsInR5cCI6IkJlYXJlciIsImF6cCI6InRvdXItYXBwIiwic2Vzc2lvbl9zdGF0ZSI6IjY1MmIzZTgzLWMzZWItNGExNi04ZmUxLTk1MjIxYmRlYzk0YiIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cHM6Ly90b3VhcHBhcGkuaGVyb2t1YXBwLmNvbSJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy10cmF2ZWxsZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIiwiYXBwLXVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiI2NTJiM2U4My1jM2ViLTRhMTYtOGZlMS05NTIyMWJkZWM5NGIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkVsZ3VuIE1hcXN1ZHphZGUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJlbGd1bnZtQGNvZGUuZWR1LmF6IiwiZ2l2ZW5fbmFtZSI6IkVsZ3VuIiwiZmFtaWx5X25hbWUiOiJNYXFzdWR6YWRlIiwiZW1haWwiOiJlbGd1bnZtQGNvZGUuZWR1LmF6In0.CkdYGzCV3y-BgSKIY55e9F7sFimWiEFfmPFunzGYmo-cZ24wbVJJ2pkF7bP2My5jlq-N09A9N2UPxSjlcSxfMCJSTOUTuiUUu2ElDOMq9xJ5dcZ-bRQ_xF4CcG8I1WHUxLgk8E_rgsfnDO65WoORTqCnLEFht-TMAkpEe1DcipCqKB8zeP5iIDYGHzHuQGndpWea1JCH6s9kJnKpjozvR7eqzeSQBZwsuW8RU8QMKvHPLQr5SS6B8ZwFyh60Bho-0EGkqv-MM97YbrmZ9ZayVuRwHN5uhh_8sRKeBD1YUotpm7eYQISAIqPxeCThDcw81h0WmH0cypCa5kanbDKKTQ",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "dev_url",
+			"value": "https://touappapi.herokuapp.com"
+		},
+		{
+			"key": "pro_url",
+			"value": "https://tourappspring.herokuapp.com"
+		}
+	]
+}
