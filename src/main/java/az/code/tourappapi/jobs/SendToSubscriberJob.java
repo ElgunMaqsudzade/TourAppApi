@@ -32,10 +32,7 @@ import static az.code.tourappapi.utils.ImageUtil.toFormat;
 public class SendToSubscriberJob implements Job {
     private final RabbitTemplate temp;
     private final ImageUtil imageUtil;
-    private final AppConfig conf;
 
-
-    private static final String messages = "messages.properties";
     @SneakyThrows
     @Override
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
@@ -54,15 +51,9 @@ public class SendToSubscriberJob implements Job {
         imageUtil.addText(image, toFormat(offer.getTravelEndDate()), Color.BLACK, 900, 1050, Font.PLAIN, 24);
         imageUtil.addText(image, String.valueOf(Math.round(offer.getPrice())), Color.BLACK, 670, 1250, Font.PLAIN, 24);
 
-        ClassLoader cl = this.getClass().getClassLoader();
-        InputStream inputStream = cl.getResourceAsStream(messages);
-        Properties props = new Properties();
-        props.load(inputStream);
-
         MessageDTO messageDTO = MessageDTO
                 .builder()
                 .id(offer.getId())
-                .message(props.getProperty("offerCaption") + offer.getId())
                 .UUID(offer.getOrder().getTelegramIdentifier())
                 .fileAsBytes(imageUtil.toByteArray(image))
                 .build();

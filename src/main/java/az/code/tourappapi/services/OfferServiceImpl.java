@@ -66,7 +66,7 @@ public class OfferServiceImpl implements OfferService {
 
         sch.runSendToSubscriberJob(offer);
 
-        return mapperUtil.map(offer, OfferDTO.class);
+        return mapperUtil.map(offer, OfferDTO.class).toBuilder().isAccepted(false).build();
     }
 
     @Override
@@ -84,7 +84,12 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferDTO find(@NotNull AppUser user, @NotNull Long id) {
-        return mapperUtil.map(offerDAO.find(id, user.getId()), OfferDTO.class);
+        Offer offer = offerDAO.find(id, user.getId());
+        OfferDTO offerDTO = mapperUtil.map(offer, OfferDTO.class);
+        if (offer.getAppUserOrder().getStatus().equals(OrderStatus.ACCEPTED)) {
+            offerDTO.setAccepted(true);
+        }
+        return offerDTO;
     }
 
     @Override
@@ -98,6 +103,14 @@ public class OfferServiceImpl implements OfferService {
                 .where(offerSpec.byOrderId(orderId)
                         .and(offerSpec.expired(false)));
         Page<Offer> p = offerDAO.findAll(spec, PageRequest.of(page, size));
-        return mapperUtil.toPagination(p, OfferDTO.class);
+
+        PaginationDTO<OfferDTO> paginationDTO = mapperUtil.toPagination(p, OfferDTO.class);
+        p.getContent().parallelStream()
+                .filter(e -> e.getAppUserOrder().getStatus().equals(OrderStatus.ACCEPTED))
+                .forEach(e -> paginationDTO.getItems()
+                        .parallelStream()
+                        .filter(s -> s.getId().equals(e.getId()))
+                        .forEach(s -> s.setAccepted(true)));
+        return paginationDTO;
     }
 }

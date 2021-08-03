@@ -59,7 +59,7 @@ app:
   duration-hour: 24
   onetime-only: true
   work-hours:
-    end: '19:00'
+    end: '23:00'
     start: '09:00'
   image:
     extension: png

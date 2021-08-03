@@ -34,4 +34,6 @@ public class OfferDTO implements Serializable {
     @Positive
     @NotNull
     private Double price;
+
+    private boolean isAccepted;
 }
