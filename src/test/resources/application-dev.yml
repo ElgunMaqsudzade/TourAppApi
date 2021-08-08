@@ -1,0 +1,70 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8081/auth/realms/traveller/protocol/openid-connect/certs'
+          issuer-uri: 'http://localhost:8081/auth/realms/traveller'
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    username: backend.ended@gmail.com
+    password: lpihwmobszrbygzg
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 465
+          auth: true
+          ssl:
+            enable: true
+  quartz:
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 20
+
+
+
+keycloak:
+  auth-server-url: http://localhost:8081/auth/
+  ssl-required: external
+  realm: traveller
+  resource: tour-app
+  credentials:
+    secret: b81adc70-34f9-4d83-8b3f-ce6521ce5599
+  bearer-only: true
+  principal-attribute: preferred_username
+
+keycloak-admin:
+  username: jon_snow883
+  password: salam123
+  client-id: admin-cli
+  realm: master
+  roles:
+    initial: 'not-verified'
+    standard: 'app-user'
+app:
+  duration-hour: 24
+  onetime-only: true
+  work-hours:
+    end: '23:00'
+    start: '00:00'
+  image:
+    extension: png
+    root: images
+    size: 30
+    style: 0
+    default-file: images/Default.png
+  source: messages

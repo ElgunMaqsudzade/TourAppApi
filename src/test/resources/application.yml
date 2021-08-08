@@ -1,0 +1,70 @@
+spring:
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'https://keycloak-testion.herokuapp.com/auth/realms/traveller/protocol/openid-connect/certs'
+          issuer-uri: 'https://keycloak-testion.herokuapp.com/auth/realms/traveller'
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    username: backend.ended@gmail.com
+    password: lpihwmobszrbygzg
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          port: 465
+          auth: true
+          ssl:
+            enable: true
+  quartz:
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 20
+  jackson:
+    date-format:
+
+
+keycloak:
+  auth-server-url: https://keycloak-testion.herokuapp.com/auth/
+  ssl-required: external
+  realm: traveller
+  resource: tour-app
+  credentials:
+    secret: 28cdb878-a1b2-4c1d-898f-c7290f8b4b3b
+  bearer-only: true
+  principal-attribute: preferred_username
+
+keycloak-admin:
+  username: jon_snow883
+  password: salam123
+  client-id: admin-cli
+  realm: master
+  roles:
+    initial: 'not-verified'
+    standard: 'app-user'
+app:
+  duration-hour: 24
+  onetime-only: true
+  work-hours:
+    end: '23:00'
+    start: '09:00'
+  image:
+    extension: png
+    root: images
+    size: 30
+    style: 0
+    default-file: images/Default.png
+  source: messages

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -44,6 +45,7 @@ public class ImageUtil {
         ClassLoader cl = this.getClass().getClassLoader();
         InputStream inputStream = cl.getResourceAsStream(root);
         if (inputStream == null) throw new DataNotFound("Input stream not found");
+        InputStreamResource ds = new InputStreamResource(inputStream);
         return ImageIO.read(inputStream);
     }
 
