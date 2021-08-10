@@ -44,8 +44,6 @@ public class OfferServiceImpl implements OfferService {
         if (conf.getOnetimeOnly() && offerDAO.existsByOrderId(orderId))
             throw new ConflictException();
 
-        if (!timerUtil.isAppropriate())
-            throw new ForbiddenException();
 
         Optional<Order> order = orderDAO
                 .find(Specification
