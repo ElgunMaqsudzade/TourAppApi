@@ -16,8 +16,8 @@ spring:
       max-file-size: 10MB
   mail:
     host: smtp.gmail.com
-    username: backend.ended@gmail.com
-    password: lpihwmobszrbygzg
+    username: reminderazerbaijan@gmail.com
+    password: tzdmjepluldckukk
     properties:
       mail:
         transport:
